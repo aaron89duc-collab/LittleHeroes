@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#0b1230" />
+    <title>Little Heroes: Royal City Brawl</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap&subset=vietnamese" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link rel="icon" type="image/png" href="./assets/characters/dau-dau-head.png" />
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #060a1c; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; }
+      #game { position: fixed; inset: 0; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+      #rotate { display: none; position: fixed; inset: 0; z-index: 10; background: #0b1230; color: #fff; font: 600 20px system-ui, sans-serif; align-items: center; justify-content: center; text-align: center; flex-direction: column; gap: 16px; }
+      #rotate .phone { width: 48px; height: 80px; border: 4px solid #ffd23f; border-radius: 10px; animation: rot 1.6s ease-in-out infinite; }
+      @keyframes rot { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+      @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <div id="rotate"><div class="phone"></div><div>Hãy xoay ngang điện thoại để chơi</div></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
