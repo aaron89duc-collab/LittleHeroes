@@ -15,10 +15,11 @@ export const ENEMIES: Record<string, EnemyConfig> = {
     score: 120, drops: { health: 0.06, energy: 0.14, token: 0.25 },
   },
   brute: {
-    id: 'brute', name: 'Đầu gấu bọc giáp', archetype: 'brute', maxHp: 120, moveSpeed: 55, damage: 12,
+    id: 'brute', name: 'Dị nhân bọc giáp', archetype: 'brute', maxHp: 120, moveSpeed: 55, damage: 12,
     damageReceivedMultiplier: 0.9, contactRange: 70, attackCooldownMs: 2000, telegraphMs: 600, scale: 1.3,
     head: 'head-boss', palette: { body: 0x2a2a30, dark: 0x16161a, skin: 0xd88f62, accent: 0xb32020 },
     score: 300, drops: { health: 0.3, energy: 0.25, token: 0.5 }, armor: true,
+    sprite: { key: 'cyber1', scale: 3.6 },
   },
   leaper: {
     id: 'leaper', name: 'Đặc nhiệm biến chất', archetype: 'leaper', maxHp: 45, moveSpeed: 105, damage: 8,
@@ -69,12 +70,14 @@ export const ENEMIES: Record<string, EnemyConfig> = {
     damageReceivedMultiplier: 1.2, contactRange: 56, attackCooldownMs: 1500, telegraphMs: 420, scale: 1,
     head: 'head-scientist', palette: { body: 0xe8eef5, dark: 0x8a96a8, skin: 0xb9a3ff, accent: 0x7c4dff },
     score: 60, drops: { health: 0.05, energy: 0.12, token: 0.15 },
+    sprite: { key: 'shaman', scale: 0.72, tint: 0xc8b8ff },
   },
   elite: {
     id: 'elite', name: 'Bản sao trùm cũ', archetype: 'brute', maxHp: 170, moveSpeed: 70, damage: 13,
     damageReceivedMultiplier: 0.9, contactRange: 74, attackCooldownMs: 1800, telegraphMs: 560, scale: 1.4,
     head: 'head-boss', palette: { body: 0x3a1d5c, dark: 0x1c0e2e, skin: 0xb48cff, accent: 0xff3bd4 },
     score: 400, drops: { health: 0.5, energy: 0.4, token: 0.6 }, armor: true,
+    sprite: { key: 'cyber1', scale: 4.0, tint: 0xd8a8ff },
   },
 };
 

@@ -188,6 +188,7 @@ export abstract class Actor {
     const killed = this.hp <= 0;
     if (killed) {
       this.alive = false;
+      this.view?.setDead?.();
       this.onDefeated(e);
       this.launch(e, Math.max(260, e.knockback));
       return { landed: true, damage: dmg, blocked: armored, killed: true };

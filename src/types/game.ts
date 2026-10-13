@@ -97,6 +97,13 @@ export interface MoveConfig {
 
 export type EnemyArchetype = 'grunt' | 'runner' | 'brute' | 'leaper' | 'flyer' | 'spitter' | 'summoner' | 'clone';
 
+/** Sprite-sheet body from the user's asset packs (replaces the puppet rig). */
+export interface SpriteRef {
+  key: string;
+  scale: number;
+  tint?: number;
+}
+
 export interface EnemyConfig {
   id: string;
   name: string;
@@ -115,6 +122,7 @@ export interface EnemyConfig {
   drops: { health: number; energy: number; token: number };
   armor?: boolean;
   projectile?: { speed: number; damage: number; color: number; kind: 'spit' | 'sonic' | 'energy' | 'web' };
+  sprite?: SpriteRef;
 }
 
 export type BossMoveKind =
@@ -169,6 +177,9 @@ export interface BossConfig {
   maxStaggerPerWindow: number; // anti stun-lock: how many flinches per 4s window
   armored?: boolean; // e.g. needs pillars destroyed
   score: number;
+  sprite?: SpriteRef;
+  /** sprite used after the phase-2 transformation (Hắc Ảnh) */
+  transformSprite?: SpriteRef;
 }
 
 export type HazardKind =

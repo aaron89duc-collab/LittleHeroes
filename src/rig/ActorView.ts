@@ -22,6 +22,8 @@ export interface ActorView {
   setTintAll(color: number | null): void;
   setWobble(v: number): void;
   update(dtMs: number): void;
+  /** optional: play a death animation (sprite bodies) */
+  setDead?(): void;
   destroy(): void;
   readonly currentAnim: string;
   readonly animDone: boolean;

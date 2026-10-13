@@ -104,17 +104,23 @@ export interface BackgroundKeys {
 export function paintBackground(scene: Phaser.Scene, theme: StageTheme): BackgroundKeys {
   seed = theme.split('').reduce((a, c) => a + c.charCodeAt(0) * 31, 7);
   const keys = { far: `bg-${theme}-far`, mid: `bg-${theme}-mid`, floor: `bg-${theme}-floor` };
-  if (scene.textures.exists(keys.far)) return keys;
-  const far = makeCanvas(scene, keys.far, GAME_W, GAME_H);
-  const mid = makeCanvas(scene, keys.mid, GAME_W, GAME_H);
-  const floor = makeCanvas(scene, keys.floor, 512, FLOOR_H);
+  // Layers loaded from image files (user asset packs) win; missing layers are painted procedurally.
   const P = PAINTERS[theme];
-  P.far(far.ctx, GAME_W, GAME_H);
-  P.mid(mid.ctx, GAME_W, FLOOR_TOP);
-  P.floor(floor.ctx, 512, FLOOR_H);
-  far.tex.refresh();
-  mid.tex.refresh();
-  floor.tex.refresh();
+  if (!scene.textures.exists(keys.far)) {
+    const far = makeCanvas(scene, keys.far, GAME_W, GAME_H);
+    P.far(far.ctx, GAME_W, GAME_H);
+    far.tex.refresh();
+  }
+  if (!scene.textures.exists(keys.mid)) {
+    const mid = makeCanvas(scene, keys.mid, GAME_W, GAME_H);
+    P.mid(mid.ctx, GAME_W, FLOOR_TOP);
+    mid.tex.refresh();
+  }
+  if (!scene.textures.exists(keys.floor)) {
+    const floor = makeCanvas(scene, keys.floor, 512, FLOOR_H);
+    P.floor(floor.ctx, 512, FLOOR_H);
+    floor.tex.refresh();
+  }
   return keys;
 }
 

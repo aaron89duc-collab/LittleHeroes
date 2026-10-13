@@ -3,7 +3,7 @@ import type { StageConfig } from '../types/game';
 /** The 10-stage campaign (GDD §9). Data only — scenes/systems read this. */
 export const STAGES: StageConfig[] = [
   {
-    id: 1, name: 'Phố Đêm Hỗn Loạn', theme: 'street', backgroundKey: 'bg-street', cardKey: 'card-city',
+    id: 1, name: 'Phố Đêm Hỗn Loạn', theme: 'street', backgroundKey: 'bg-street', cardKey: 'card-img-street',
     story: 'Đội Đặc Nhiệm Hoàng Gia nhận tín hiệu cầu cứu: bọn côn đồ được tiếp sức bởi năng lượng lạ đang tấn công người dân!',
     waves: [
       { enemies: [{ type: 'grunt', count: 3 }] },
@@ -11,13 +11,13 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'runner', count: 3 }, { type: 'brute', count: 1 }], maxAlive: 4 },
     ],
     bossId: 'streetBoss',
-    objectives: ['Đánh bại Kẻ Cầm Đầu Phố', 'Phụ: giải cứu 3 người dân'],
+    objectives: ['Đánh bại Heo Rừng Đầu Đảng', 'Phụ: giải cứu 3 người dân'],
     rewardScore: 2000, reward: 'Mở khóa Màn 2',
     hazards: [{ kind: 'falling', intervalMs: 7000, warningMs: 1100, damage: 10 }],
     rescueNpcs: 3, enemyHpMul: 1, enemyDmgMul: 1, music: 0, rain: true,
   },
   {
-    id: 2, name: 'Trung Tâm Thương Mại Bị Chiếm', theme: 'mall', backgroundKey: 'bg-mall',
+    id: 2, name: 'Trung Tâm Thương Mại Bị Chiếm', theme: 'mall', backgroundKey: 'bg-mall', cardKey: 'card-img-mall',
     story: 'Quái vật tràn vào trung tâm thương mại để cướp lõi năng lượng giấu trong kho hàng.',
     waves: [
       { enemies: [{ type: 'runner', count: 4 }] },
@@ -25,7 +25,7 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'brute', count: 1 }, { type: 'runner', count: 3 }], maxAlive: 4 },
     ],
     bossId: 'mechaBear',
-    objectives: ['Đánh bại Gấu Máy', 'Né kệ hàng đổ và băng chuyền'],
+    objectives: ['Đánh bại Chiến Xa Gấu Máy', 'Né kệ hàng đổ và băng chuyền'],
     rewardScore: 2500, reward: 'Mảnh lõi năng lượng đầu tiên',
     hazards: [
       { kind: 'shelf', intervalMs: 8000, warningMs: 1100, damage: 11 },
@@ -42,7 +42,7 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'spitter', count: 2 }, { type: 'brute', count: 1 }] },
     ],
     bossId: 'spiderQueen',
-    objectives: ['Đánh bại Nhện Chúa', 'Tránh khỏi đường ray khi đèn cảnh báo bật'],
+    objectives: ['Đánh bại Nhện Máy Chúa', 'Tránh khỏi đường ray khi đèn cảnh báo bật'],
     rewardScore: 3000, reward: 'Bản đồ đường dây vận chuyển',
     hazards: [{ kind: 'train', intervalMs: 11000, warningMs: 1800, damage: 18 }],
     enemyHpMul: 1.1, enemyDmgMul: 1.1, music: 2,
@@ -66,7 +66,7 @@ export const STAGES: StageConfig[] = [
     enemyHpMul: 1.15, enemyDmgMul: 1.15, music: 3,
   },
   {
-    id: 5, name: 'Cảng Hàng Hóa Bí Ẩn', theme: 'port', backgroundKey: 'bg-port', cardKey: 'card-port',
+    id: 5, name: 'Cảng Hàng Hóa Bí Ẩn', theme: 'port', backgroundKey: 'bg-port', cardKey: 'card-img-port',
     story: 'Một chuyến tàu đêm đang vận chuyển lõi năng lượng ra khỏi thành phố. Phải chặn nó lại!',
     waves: [
       { enemies: [{ type: 'runner', count: 4 }] },
@@ -88,13 +88,13 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'clone', count: 4 }, { type: 'brute', count: 1 }] },
     ],
     bossId: 'madDoctor',
-    objectives: ['Đánh bại Tiến Sĩ Điên', 'Đánh đúng bản thể để ngắt hồi phục'],
+    objectives: ['Đánh bại Pháp Sư Điên', 'Đánh đúng bản thể để ngắt hồi phục'],
     rewardScore: 4500, reward: 'Chìa khóa vào căn cứ Hắc Ảnh',
     hazards: [{ kind: 'energyFloor', intervalMs: 7000, warningMs: 1200, damage: 9 }],
     enemyHpMul: 1.25, enemyDmgMul: 1.25, music: 5,
   },
   {
-    id: 7, name: 'Truy Đuổi Trên Mái Nhà', theme: 'rooftop', backgroundKey: 'bg-rooftop',
+    id: 7, name: 'Truy Đuổi Trên Mái Nhà', theme: 'rooftop', backgroundKey: 'bg-rooftop', cardKey: 'card-img-rooftop',
     story: 'Sinh vật giữ chìa khóa cổng bỏ chạy qua các mái nhà giữa cơn giông.',
     waves: [
       { enemies: [{ type: 'flyer', count: 4 }] },

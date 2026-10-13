@@ -1,0 +1,287 @@
+{
+ "backgrounds": {
+  "street": {
+   "far": "assets/backgrounds/bg-street-far.png",
+   "mid": "assets/backgrounds/bg-street-mid.png",
+   "floor": "assets/backgrounds/bg-street-floor.png",
+   "source": "City3"
+  },
+  "mall": {
+   "far": "assets/backgrounds/bg-mall-far.png",
+   "mid": "assets/backgrounds/bg-mall-mid.png",
+   "floor": "assets/backgrounds/bg-mall-floor.png",
+   "source": "City2"
+  },
+  "port": {
+   "far": "assets/backgrounds/bg-port-far.png",
+   "mid": "assets/backgrounds/bg-port-mid.png",
+   "floor": "assets/backgrounds/bg-port-floor.png",
+   "source": "City1"
+  },
+  "rooftop": {
+   "far": "assets/backgrounds/bg-rooftop-far.png",
+   "mid": "assets/backgrounds/bg-rooftop-mid.png",
+   "floor": "assets/backgrounds/bg-rooftop-floor.png",
+   "source": "City4"
+  },
+  "ice": {
+   "far": "assets/backgrounds/bg-ice-far.png",
+   "source": "nature_6"
+  }
+ },
+ "sprites": {
+  "cyber1": {
+   "frameW": 96,
+   "frameH": 96,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/cyber1/idle.png",
+     "frames": 4
+    },
+    "walk": {
+     "file": "assets/sprites/cyber1/walk.png",
+     "frames": 6
+    },
+    "attack": {
+     "file": "assets/sprites/cyber1/attack.png",
+     "frames": 6
+    },
+    "attack2": {
+     "file": "assets/sprites/cyber1/attack2.png",
+     "frames": 6
+    },
+    "attack3": {
+     "file": "assets/sprites/cyber1/attack3.png",
+     "frames": 6
+    },
+    "grab": {
+     "file": "assets/sprites/cyber1/grab.png",
+     "frames": 6
+    },
+    "hurt": {
+     "file": "assets/sprites/cyber1/hurt.png",
+     "frames": 2
+    },
+    "death": {
+     "file": "assets/sprites/cyber1/death.png",
+     "frames": 6
+    },
+    "jump": {
+     "file": "assets/sprites/cyber1/jump.png",
+     "frames": 2
+    },
+    "fall": {
+     "file": "assets/sprites/cyber1/fall.png",
+     "frames": 2
+    },
+    "prepare": {
+     "file": "assets/sprites/cyber1/prepare.png",
+     "frames": 2
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 37
+  },
+  "cyber2": {
+   "frameW": 96,
+   "frameH": 96,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/cyber2/idle.png",
+     "frames": 6
+    },
+    "walk": {
+     "file": "assets/sprites/cyber2/walk.png",
+     "frames": 6
+    },
+    "attack": {
+     "file": "assets/sprites/cyber2/attack.png",
+     "frames": 6
+    },
+    "attack2": {
+     "file": "assets/sprites/cyber2/attack2.png",
+     "frames": 6
+    },
+    "hurt": {
+     "file": "assets/sprites/cyber2/hurt.png",
+     "frames": 2
+    },
+    "death": {
+     "file": "assets/sprites/cyber2/death.png",
+     "frames": 4
+    },
+    "prepare": {
+     "file": "assets/sprites/cyber2/prepare.png",
+     "frames": 6
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 64
+  },
+  "cyber3": {
+   "frameW": 96,
+   "frameH": 96,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/cyber3/idle.png",
+     "frames": 4
+    },
+    "walk": {
+     "file": "assets/sprites/cyber3/walk.png",
+     "frames": 6
+    },
+    "attack": {
+     "file": "assets/sprites/cyber3/attack.png",
+     "frames": 6
+    },
+    "attack2": {
+     "file": "assets/sprites/cyber3/attack2.png",
+     "frames": 6
+    },
+    "attack3": {
+     "file": "assets/sprites/cyber3/attack3.png",
+     "frames": 6
+    },
+    "walkattack": {
+     "file": "assets/sprites/cyber3/walkattack.png",
+     "frames": 6
+    },
+    "hurt": {
+     "file": "assets/sprites/cyber3/hurt.png",
+     "frames": 2
+    },
+    "death": {
+     "file": "assets/sprites/cyber3/death.png",
+     "frames": 6
+    },
+    "jump": {
+     "file": "assets/sprites/cyber3/jump.png",
+     "frames": 4
+    },
+    "fall": {
+     "file": "assets/sprites/cyber3/fall.png",
+     "frames": 4
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 69
+  },
+  "boar": {
+   "frameW": 244,
+   "frameH": 223,
+   "facing": "left",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/boar/idle.png",
+     "frames": 8
+    },
+    "walk": {
+     "file": "assets/sprites/boar/walk.png",
+     "frames": 10
+    },
+    "attack": {
+     "file": "assets/sprites/boar/attack.png",
+     "frames": 10
+    },
+    "hurt": {
+     "file": "assets/sprites/boar/hurt.png",
+     "frames": 10
+    },
+    "death": {
+     "file": "assets/sprites/boar/death.png",
+     "frames": 10
+    }
+   },
+   "footY": 0.925,
+   "bodyH": 223
+  },
+  "devil": {
+   "frameW": 240,
+   "frameH": 222,
+   "facing": "left",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/devil/idle.png",
+     "frames": 8
+    },
+    "walk": {
+     "file": "assets/sprites/devil/walk.png",
+     "frames": 10
+    },
+    "attack": {
+     "file": "assets/sprites/devil/attack.png",
+     "frames": 10
+    },
+    "hurt": {
+     "file": "assets/sprites/devil/hurt.png",
+     "frames": 10
+    },
+    "death": {
+     "file": "assets/sprites/devil/death.png",
+     "frames": 10
+    }
+   },
+   "footY": 0.928,
+   "bodyH": 222
+  },
+  "shaman": {
+   "frameW": 245,
+   "frameH": 223,
+   "facing": "left",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/shaman/idle.png",
+     "frames": 8
+    },
+    "walk": {
+     "file": "assets/sprites/shaman/walk.png",
+     "frames": 10
+    },
+    "attack": {
+     "file": "assets/sprites/shaman/attack.png",
+     "frames": 10
+    },
+    "hurt": {
+     "file": "assets/sprites/shaman/hurt.png",
+     "frames": 10
+    },
+    "death": {
+     "file": "assets/sprites/shaman/death.png",
+     "frames": 10
+    }
+   },
+   "footY": 0.927,
+   "bodyH": 223
+  }
+ },
+ "icons": {
+  "icon-health": "assets/ui/icons/icon-health.png",
+  "icon-energy": "assets/ui/icons/icon-energy.png",
+  "icon-token": "assets/ui/icons/icon-token.png",
+  "skill-dd_s1": "assets/ui/icons/skill-dd_s1.png",
+  "skill-dd_s2": "assets/ui/icons/skill-dd_s2.png",
+  "skill-dd_s3": "assets/ui/icons/skill-dd_s3.png",
+  "skill-dd_ult": "assets/ui/icons/skill-dd_ult.png",
+  "skill-ss_s1": "assets/ui/icons/skill-ss_s1.png",
+  "skill-ss_s2": "assets/ui/icons/skill-ss_s2.png",
+  "skill-ss_s3": "assets/ui/icons/skill-ss_s3.png",
+  "skill-ss_ult": "assets/ui/icons/skill-ss_ult.png",
+  "skill-bp_s1": "assets/ui/icons/skill-bp_s1.png",
+  "skill-bp_s2": "assets/ui/icons/skill-bp_s2.png",
+  "skill-bp_s3": "assets/ui/icons/skill-bp_s3.png",
+  "skill-bp_ult": "assets/ui/icons/skill-bp_ult.png",
+  "icon-lock": "assets/ui/icons/icon-lock.png",
+  "icon-fist": "assets/ui/icons/icon-fist.png"
+ },
+ "commander": [
+  "assets/ui/commander/commander-1.png",
+  "assets/ui/commander/commander-2.png",
+  "assets/ui/commander/commander-3.png",
+  "assets/ui/commander/commander-4.png",
+  "assets/ui/commander/commander-5.png",
+  "assets/ui/commander/commander-6.png"
+ ]
+}

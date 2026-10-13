@@ -16,7 +16,9 @@ export class Pickup {
   private vx: number;
 
   constructor(private w: GameWorldApi, readonly kind: PickupKind, public x: number, public y: number) {
-    this.img = w.scene.add.image(x, y, `pickup-${kind}`).setScale(0.75);
+    // pixel-art icons from the user's UI pack when available
+    const icon = `icon-${kind}`;
+    this.img = w.scene.textures.exists(icon) ? w.scene.add.image(x, y, icon).setScale(0.85) : w.scene.add.image(x, y, `pickup-${kind}`).setScale(0.75);
     this.shadow = w.scene.add.image(x, y, 'fx-shadow').setScale(0.5, 0.4).setDepth(-5);
     this.vx = Phaser.Math.Between(-90, 90);
   }

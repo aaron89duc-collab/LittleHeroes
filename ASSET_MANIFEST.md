@@ -1,5 +1,22 @@
 # ASSET MANIFEST
 
+## Asset từ thư mục của bạn (E:\game\asset) — đã tích hợp
+
+Chuyển đổi bằng `tools/import_user_assets.py` → `public/assets/` + `src/config/userAssets.json`.
+
+| Gói | Dùng cho |
+|---|---|
+| craftpix street 2D backgrounds (City1–4) | Bối cảnh Màn 1 (City3), Màn 2 (City2), Màn 5 (City1), Màn 7 (City4) + thẻ giới thiệu màn + nền menu |
+| craftpix nature backgrounds (nature_6) | Bầu trời cực quang Màn 8 |
+| craftpix cyberpunk factory bosses (1, 2, 3) | Người Khổng Lồ Đột Biến + địch "Dị nhân bọc giáp"/"Bản sao trùm" (1), Chiến Xa Gấu Máy (2), Nhện Máy Chúa (3) |
+| craftpix fantasy boss creatures | Heo Rừng Đầu Đảng (Boar King), Pháp Sư Điên + bản sao (Shaman King), Hắc Ảnh dạng Quỷ Vương (Devil Leader) |
+| craftpix pixel icons 16×16 | Cầu HP/EN/ngôi sao, biểu tượng 12 kỹ năng trên HUD |
+| craftpix swordsman portrait emotes | Chân dung Chỉ huy giao nhiệm vụ ở màn giới thiệu |
+| kenney animated characters retro | Không dùng — đây là mô hình 3D (.fbx), không dùng được trong game 2D |
+
+Không có file âm thanh trong thư mục → âm thanh/nhạc vẫn là tổng hợp Web Audio.
+Mặt 3 nhân vật chính giữ nguyên từ ảnh tham chiếu.
+
 Trạng thái: **Ref** = cắt từ ảnh tham chiếu của người dùng · **Proc** = vẽ thủ tục bằng code lúc chạy · **Synth** = âm thanh tổng hợp · **Cần bổ sung** = nên thay bằng artwork/âm thanh cuối.
 
 Game chơi được trọn vẹn với bộ asset hiện tại. Các mục "Proc" là placeholder chất lượng cao, có thể thay dần.

@@ -6,7 +6,7 @@ import type { BossConfig } from '../types/game';
  */
 export const BOSSES: Record<string, BossConfig> = {
   streetBoss: {
-    id: 'streetBoss', name: 'Kẻ Cầm Đầu Phố', maxHp: 420, moveSpeed: 85, damageReceivedMultiplier: 1, scale: 1.7,
+    id: 'streetBoss', name: 'Heo Rừng Đầu Đảng', maxHp: 420, moveSpeed: 85, damageReceivedMultiplier: 1, scale: 1.7, sprite: { key: 'boar', scale: 1.5 },
     body: 'humanoid', head: 'head-boss', palette: { body: 0x2a2a30, dark: 0x141418, skin: 0xd88f62, accent: 0xd62f2f },
     maxStaggerPerWindow: 4, score: 3000,
     phases: [
@@ -15,7 +15,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'charge', damage: 14, telegraphMs: 650, recoveryMs: 900, weight: 2 },
         { kind: 'slam', damage: 16, telegraphMs: 800, recoveryMs: 1000, weight: 1, range: 150 },
       ] },
-      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.15, message: 'Kẻ Cầm Đầu Phố nổi giận!', moves: [
+      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.15, message: 'Heo Rừng Đầu Đảng nổi giận!', moves: [
         { kind: 'combo', damage: 10, telegraphMs: 380, recoveryMs: 650, weight: 3, count: 3 },
         { kind: 'charge', damage: 15, telegraphMs: 600, recoveryMs: 850, weight: 2 },
         { kind: 'slam', damage: 18, telegraphMs: 750, recoveryMs: 950, weight: 2, range: 170 },
@@ -23,7 +23,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   mechaBear: {
-    id: 'mechaBear', name: 'Gấu Máy', maxHp: 520, moveSpeed: 75, damageReceivedMultiplier: 0.95, scale: 1.9,
+    id: 'mechaBear', name: 'Chiến Xa Gấu Máy', maxHp: 520, moveSpeed: 75, damageReceivedMultiplier: 0.95, scale: 1.9, sprite: { key: 'cyber2', scale: 3.4 },
     body: 'bear', head: 'head-robot', palette: { body: 0x6b7b95, dark: 0x343e52, skin: 0xa8b8d0, accent: 0xffb02e },
     maxStaggerPerWindow: 3, score: 3500,
     phases: [
@@ -33,7 +33,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'charge', damage: 15, telegraphMs: 700, recoveryMs: 1000, weight: 2 },
         { kind: 'curl', damage: 0, telegraphMs: 300, recoveryMs: 400, weight: 1 },
       ] },
-      { hpBelow: 0.45, speedMul: 1.2, damageMul: 1.15, message: 'Gấu Máy quá tải động cơ!', moves: [
+      { hpBelow: 0.45, speedMul: 1.2, damageMul: 1.15, message: 'Chiến Xa quá tải động cơ!', moves: [
         { kind: 'slam', damage: 17, telegraphMs: 700, recoveryMs: 900, weight: 2, range: 160 },
         { kind: 'charge', damage: 16, telegraphMs: 600, recoveryMs: 900, weight: 3 },
         { kind: 'combo', damage: 12, telegraphMs: 450, recoveryMs: 700, weight: 2, count: 2 },
@@ -42,7 +42,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   spiderQueen: {
-    id: 'spiderQueen', name: 'Nhện Chúa', maxHp: 560, moveSpeed: 95, damageReceivedMultiplier: 1, scale: 1.6,
+    id: 'spiderQueen', name: 'Nhện Máy Chúa', maxHp: 560, moveSpeed: 95, damageReceivedMultiplier: 1, scale: 1.6, sprite: { key: 'cyber3', scale: 3.6 },
     body: 'spider', head: 'head-mutant', palette: { body: 0x3a2350, dark: 0x1a0f26, skin: 0x8b5cc8, accent: 0xff3bd4 },
     maxStaggerPerWindow: 3, score: 4000,
     phases: [
@@ -52,7 +52,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'summon', damage: 0, telegraphMs: 700, recoveryMs: 600, weight: 1, count: 2, summon: 'minion' },
         { kind: 'combo', damage: 10, telegraphMs: 420, recoveryMs: 700, weight: 2, count: 2 },
       ] },
-      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.1, message: 'Nhện Chúa gọi cả đàn!', moves: [
+      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.1, message: 'Nhện Máy Chúa gọi cả đàn!', moves: [
         { kind: 'leap', damage: 17, telegraphMs: 700, recoveryMs: 850, weight: 3 },
         { kind: 'projectile', damage: 7, telegraphMs: 500, recoveryMs: 650, weight: 2, count: 3, color: 0xf0f0ff },
         { kind: 'summon', damage: 0, telegraphMs: 650, recoveryMs: 600, weight: 2, count: 3, summon: 'minion' },
@@ -60,7 +60,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   giant: {
-    id: 'giant', name: 'Người Khổng Lồ Đột Biến', maxHp: 680, moveSpeed: 70, damageReceivedMultiplier: 1, scale: 2.1,
+    id: 'giant', name: 'Người Khổng Lồ Đột Biến', maxHp: 680, moveSpeed: 70, damageReceivedMultiplier: 1, scale: 2.1, sprite: { key: 'cyber1', scale: 6.2 },
     body: 'humanoid', head: 'head-punk', palette: { body: 0x3c6b2a, dark: 0x1d3614, skin: 0x7fc65a, accent: 0xb6ff3b },
     maxStaggerPerWindow: 2, score: 4500, armored: true,
     phases: [
@@ -98,7 +98,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   madDoctor: {
-    id: 'madDoctor', name: 'Tiến Sĩ Điên', maxHp: 640, moveSpeed: 95, damageReceivedMultiplier: 1, scale: 1.45,
+    id: 'madDoctor', name: 'Pháp Sư Điên', maxHp: 640, moveSpeed: 95, damageReceivedMultiplier: 1, scale: 1.45, sprite: { key: 'shaman', scale: 1.4 },
     body: 'humanoid', head: 'head-scientist', palette: { body: 0xeef2f7, dark: 0x8a96a8, skin: 0xffd9bf, accent: 0x7c4dff },
     maxStaggerPerWindow: 3, score: 5500,
     phases: [
@@ -107,7 +107,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'combo', damage: 11, telegraphMs: 450, recoveryMs: 750, weight: 2, count: 2, color: 0x7c4dff },
         { kind: 'clones', damage: 0, telegraphMs: 700, recoveryMs: 700, weight: 2, count: 2, summon: 'clone' },
       ] },
-      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.15, message: 'Tiến Sĩ Điên kích hoạt huyết thanh!', moves: [
+      { hpBelow: 0.5, speedMul: 1.2, damageMul: 1.15, message: 'Pháp Sư Điên kích hoạt huyết thanh!', moves: [
         { kind: 'teleport', damage: 13, telegraphMs: 500, recoveryMs: 750, weight: 3 },
         { kind: 'clones', damage: 0, telegraphMs: 650, recoveryMs: 650, weight: 2, count: 3, summon: 'clone' },
         { kind: 'slam', damage: 16, telegraphMs: 750, recoveryMs: 900, weight: 2, range: 150, color: 0x7c4dff },
@@ -184,7 +184,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   darkShadow: {
-    id: 'darkShadow', name: 'Tiến Sĩ Hắc Ảnh', maxHp: 1150, moveSpeed: 115, damageReceivedMultiplier: 1, scale: 1.55,
+    id: 'darkShadow', name: 'Tiến Sĩ Hắc Ảnh', maxHp: 1150, moveSpeed: 115, damageReceivedMultiplier: 1, scale: 1.55, transformSprite: { key: 'devil', scale: 1.6 },
     body: 'humanoid', head: 'head-shadow', palette: { body: 0x1a0f2e, dark: 0x0a0614, skin: 0xc9b6ff, accent: 0xb44dff },
     maxStaggerPerWindow: 3, score: 12000,
     phases: [
@@ -193,7 +193,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'teleport', damage: 13, telegraphMs: 500, recoveryMs: 700, weight: 2 },
         { kind: 'charge', damage: 14, telegraphMs: 600, recoveryMs: 850, weight: 2 },
       ] },
-      { hpBelow: 0.66, speedMul: 0.95, damageMul: 1.2, message: 'Hắc Ảnh biến thành quái vật khổng lồ!', moves: [
+      { hpBelow: 0.66, speedMul: 0.95, damageMul: 1.2, message: 'Hắc Ảnh hóa thành Quỷ Vương!', moves: [
         { kind: 'slam', damage: 18, telegraphMs: 800, recoveryMs: 1000, weight: 3, range: 190, color: 0xb44dff },
         { kind: 'wave', damage: 15, telegraphMs: 750, recoveryMs: 900, weight: 2, count: 2, color: 0xb44dff },
         { kind: 'combo', damage: 14, telegraphMs: 550, recoveryMs: 850, weight: 2, count: 2 },

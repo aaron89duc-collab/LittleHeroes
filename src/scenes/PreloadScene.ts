@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { loadReferenceImages, paintAllArt } from '../art/registry';
+import { createSpriteAnims } from '../rig/SpriteView';
 import { FONT, GAME_W } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
@@ -24,6 +25,7 @@ export class PreloadScene extends Phaser.Scene {
 
   create(): void {
     paintAllArt(this);
+    createSpriteAnims(this);
     const s = SaveSystem.get().data.settings;
     AudioSystem.get().setVolumes(s.musicVolume, s.sfxVolume);
     this.scene.start('MenuScene');

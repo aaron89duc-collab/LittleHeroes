@@ -3,6 +3,7 @@ import { ENEMY_RIG, HEADS } from '../art/registry';
 import { EnemyAI } from '../ai/EnemyAI';
 import { CreatureView } from '../rig/CreatureView';
 import { Rig } from '../rig/Rig';
+import { SpriteView } from '../rig/SpriteView';
 import type { EnemyConfig } from '../types/game';
 import type { HitEvent, HitResult } from '../types/world';
 import { Actor } from './Actor';
@@ -20,8 +21,10 @@ export class Enemy extends Actor {
   hasToken = false;
 
   constructor(readonly w: GameWorldApi, cfg: EnemyConfig, x: number, y: number, hpMul: number, dmgMul: number) {
-    let view: Rig | CreatureView;
-    if (cfg.archetype === 'flyer') {
+    let view: Rig | CreatureView | SpriteView;
+    if (cfg.sprite) {
+      view = new SpriteView(w.scene, cfg.sprite.key, cfg.sprite.scale, cfg.sprite.tint);
+    } else if (cfg.archetype === 'flyer') {
       view = new CreatureView(w.scene, 'drone', cfg.scale, cfg.palette);
     } else {
       const head = HEADS[cfg.head] ?? HEADS['head-thug'];

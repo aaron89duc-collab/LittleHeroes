@@ -4,6 +4,8 @@ import type { CharacterId } from '../types/game';
 import { paintBackground } from './BackgroundArt';
 import { paintEffects, paintPickups, paintProceduralHeads, paintProps } from './MiscArt';
 import { paintPartSet, paintTail, type PartSpec } from './PartArt';
+import userAssets from '../config/userAssets.json';
+import { loadSpriteSheets } from '../rig/SpriteView';
 
 /** Head textures: reference-art crops (loaded as PNG) + procedural ones. */
 export interface HeadInfo {
@@ -120,6 +122,22 @@ export const ENEMY_RIG: Record<string, string> = {
 
 export function loadReferenceImages(scene: Phaser.Scene): void {
   for (const [key, file] of Object.entries(IMAGE_FILES)) scene.load.image(key, file);
+  loadUserAssets(scene);
+}
+
+/** Art from the user's asset packs (tools/import_user_assets.py → src/config/userAssets.json). */
+function loadUserAssets(scene: Phaser.Scene): void {
+  const bgs = userAssets.backgrounds as Record<string, Partial<Record<'far' | 'mid' | 'floor', string>>>;
+  for (const [theme, layers] of Object.entries(bgs)) {
+    for (const layer of ['far', 'mid', 'floor'] as const) {
+      const f = layers[layer];
+      if (f) scene.load.image(`bg-${theme}-${layer}`, f);
+    }
+    if (layers.mid) scene.load.image(`card-img-${theme}`, `assets/backgrounds/card-img-${theme}.jpg`);
+  }
+  for (const [key, file] of Object.entries(userAssets.icons as Record<string, string>)) scene.load.image(key, file);
+  (userAssets.commander as string[]).forEach((file, i) => scene.load.image(`commander-${i + 1}`, file));
+  loadSpriteSheets(scene);
 }
 
 /** Paint everything procedural. Missing reference images are replaced with placeholders + a console warning. */

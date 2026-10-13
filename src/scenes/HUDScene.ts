@@ -26,6 +26,7 @@ export class HUDScene extends Phaser.Scene {
   private livesText!: Phaser.GameObjects.Text;
   private bossNames: Phaser.GameObjects.Text[] = [];
   private skillTexts: Phaser.GameObjects.Text[] = [];
+  private skillIcons: Array<Phaser.GameObjects.Image | null> = [];
   private bannerC!: Phaser.GameObjects.Container;
   private bannerT!: Phaser.GameObjects.Text;
   private bannerS!: Phaser.GameObjects.Text;
@@ -76,6 +77,12 @@ export class HUDScene extends Phaser.Scene {
     this.waveText = this.add.text(GAME_W / 2, 18, '', st(22, '#ffffff')).setOrigin(0.5, 0);
     for (let i = 0; i < 2; i++) this.bossNames.push(this.add.text(GAME_W / 2, 12 + i * 46, '', st(18, '#ffd6d6')).setOrigin(0.5, 0).setVisible(false));
     for (let i = 0; i < 4; i++) this.skillTexts.push(this.add.text(0, 0, '', st(15, '#ffffff', '700')).setOrigin(0.5).setDepth(3));
+    this.skillIcons = [...p.skillIds, p.stats.ultimate].map((id) => {
+      const k = `skill-${id}`;
+      if (!this.textures.exists(k)) return null;
+      this.textures.get(k).setFilter(Phaser.Textures.FilterMode.NEAREST);
+      return this.add.image(-100, -100, k).setDisplaySize(32, 32).setDepth(3);
+    });
 
     // banner
     this.bannerT = this.add.text(0, 0, '', { ...st(60, '#ffd23f'), strokeThickness: 10 }).setOrigin(0.5);
@@ -192,11 +199,12 @@ export class HUDScene extends Phaser.Scene {
   private drawSkills(g: Phaser.GameObjects.Graphics): void {
     const p = this.game_.world.player;
     const ids = [...p.skillIds, p.stats.ultimate];
-    const slotW = 160;
+    const slotW = 176;
     const baseX = this.touchOn ? 300 : GAME_W / 2 - (slotW * 4 + 30) / 2 + slotW / 2;
     const y = this.touchOn ? 30 + 0 : 690;
     if (this.touchOn) {
       // compact list under the bars on touch layouts
+      for (const ic of this.skillIcons) ic?.setVisible(false);
       ids.forEach((id, i) => {
         const m = getMove(id);
         const sel = i === p.selectedSkill;
@@ -226,7 +234,9 @@ export class HUDScene extends Phaser.Scene {
       const key = i === 3 ? 'U' : sel ? 'K ▶' : `${i + 1}`;
       const st = this.skillTexts[i];
       if (st.style.align !== 'center') st.setAlign('center');
-      st.setPosition(x, y);
+      const icon = this.skillIcons[i];
+      if (icon) icon.setPosition(x - slotW / 2 + 24, y).setAlpha(ok ? 1 : 0.4);
+      st.setPosition(icon ? x + 16 : x, y);
       setTxt(st, `${key} ${m.name}\n${m.energyCost} EN`, ok ? '#ffffff' : '#9aa6cc');
     });
     // dodge cooldown pip
