@@ -55,6 +55,7 @@ export function registerHeroSheets(scene: Phaser.Scene): void {
     const src = scene.textures.get(imgKey).getSourceImage() as HTMLImageElement;
     scene.textures.addSpriteSheet(key, src, { frameWidth: meta.frameW, frameHeight: meta.frameH });
     scene.registry.set(`${key}-meta`, meta);
+    scene.textures.remove(imgKey); // the sheet keeps its own copy; don't hold the image twice in GPU memory
   }
 }
 

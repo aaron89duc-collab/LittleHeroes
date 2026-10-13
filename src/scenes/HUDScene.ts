@@ -237,7 +237,7 @@ export class HUDScene extends Phaser.Scene {
       const cd = p.skillCooldownLeft;
       if (cd > 0 && i < 3) g.fillStyle(0x000000, 0.5).fillRoundedRect(x - slotW / 2, y - 22, slotW * (cd / 400), 44, 10);
       g.lineStyle(sel || (i === 3 && ok) ? 4 : 2, sel ? 0xffd23f : i === 3 && ok ? 0xffd23f : 0x5a78d0, 1).strokeRoundedRect(x - slotW / 2, y - 22, slotW, 44, 10);
-      const key = i === 3 ? 'U' : sel ? 'K ▶' : `${i + 1}`;
+      const key = i === 3 ? 'X' : sel ? 'S ▶' : `${i + 1}`;
       const st = this.skillTexts[i];
       if (st.style.align !== 'center') st.setAlign('center');
       const icon = this.skillIcons[i];

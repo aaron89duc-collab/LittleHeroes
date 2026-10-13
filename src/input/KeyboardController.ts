@@ -2,24 +2,25 @@ import Phaser from 'phaser';
 
 type KeyName = 'left' | 'right' | 'up' | 'down' | 'attack' | 'skill' | 'dodge' | 'jump' | 'ultimate' | 'pause' | 'cycle' | 's1' | 's2' | 's3';
 
+// PC layout: arrows move; A S D Z X C act (old J K L Space U I/Q kept as alternates).
 const BINDINGS: Record<KeyName, number[]> = {
-  left: [Phaser.Input.Keyboard.KeyCodes.A, Phaser.Input.Keyboard.KeyCodes.LEFT],
-  right: [Phaser.Input.Keyboard.KeyCodes.D, Phaser.Input.Keyboard.KeyCodes.RIGHT],
-  up: [Phaser.Input.Keyboard.KeyCodes.W, Phaser.Input.Keyboard.KeyCodes.UP],
-  down: [Phaser.Input.Keyboard.KeyCodes.S, Phaser.Input.Keyboard.KeyCodes.DOWN],
-  attack: [Phaser.Input.Keyboard.KeyCodes.J],
-  skill: [Phaser.Input.Keyboard.KeyCodes.K],
-  dodge: [Phaser.Input.Keyboard.KeyCodes.L],
-  jump: [Phaser.Input.Keyboard.KeyCodes.SPACE],
-  ultimate: [Phaser.Input.Keyboard.KeyCodes.U],
+  left: [Phaser.Input.Keyboard.KeyCodes.LEFT],
+  right: [Phaser.Input.Keyboard.KeyCodes.RIGHT],
+  up: [Phaser.Input.Keyboard.KeyCodes.UP],
+  down: [Phaser.Input.Keyboard.KeyCodes.DOWN],
+  attack: [Phaser.Input.Keyboard.KeyCodes.A, Phaser.Input.Keyboard.KeyCodes.J],
+  skill: [Phaser.Input.Keyboard.KeyCodes.S, Phaser.Input.Keyboard.KeyCodes.K],
+  dodge: [Phaser.Input.Keyboard.KeyCodes.D, Phaser.Input.Keyboard.KeyCodes.L],
+  jump: [Phaser.Input.Keyboard.KeyCodes.Z, Phaser.Input.Keyboard.KeyCodes.SPACE],
+  ultimate: [Phaser.Input.Keyboard.KeyCodes.X, Phaser.Input.Keyboard.KeyCodes.U],
   pause: [Phaser.Input.Keyboard.KeyCodes.ESC, Phaser.Input.Keyboard.KeyCodes.P],
-  cycle: [Phaser.Input.Keyboard.KeyCodes.I, Phaser.Input.Keyboard.KeyCodes.Q],
+  cycle: [Phaser.Input.Keyboard.KeyCodes.C, Phaser.Input.Keyboard.KeyCodes.Q, Phaser.Input.Keyboard.KeyCodes.I],
   s1: [Phaser.Input.Keyboard.KeyCodes.ONE],
   s2: [Phaser.Input.Keyboard.KeyCodes.TWO],
   s3: [Phaser.Input.Keyboard.KeyCodes.THREE],
 };
 
-/** Keyboard bindings from GDD §6.1 (+ I/Q or 1-3 to choose the active skill). */
+/** Keyboard bindings: arrows move, A đánh, S kỹ năng, D né, Z nhảy, X tuyệt kỹ, C (or 1-3) đổi kỹ năng. */
 export class KeyboardController {
   private keys = new Map<KeyName, Phaser.Input.Keyboard.Key[]>();
 

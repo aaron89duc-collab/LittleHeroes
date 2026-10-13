@@ -94,7 +94,7 @@ export class MenuScene extends Phaser.Scene {
       .text(BASE_W - 16, 704, 'v1.0 • Phaser 3 + TypeScript', { fontFamily: FONT, fontSize: '14px', color: '#8fa0d0' })
       .setOrigin(1, 1);
     const hint = this.add
-      .text(bx, 668, 'Mũi tên/WASD để chọn • Enter để xác nhận', { fontFamily: FONT, fontSize: '16px', color: '#c9d6ff' })
+      .text(bx, 668, 'Mũi tên để chọn • Enter / A để xác nhận', { fontFamily: FONT, fontSize: '16px', color: '#c9d6ff' })
       .setOrigin(0.5);
     void hint;
     // full screen (phones): button + iPhone hint

@@ -89,7 +89,12 @@ export class MenuButton extends Phaser.GameObjects.Container {
   }
 }
 
-/** Keyboard navigation (arrows/WASD + Enter/Space) across a list of buttons. */
+/** Enter / Space / A / Z (and legacy J) confirm in menus. */
+export function isConfirmKey(k: string): boolean {
+  return k === 'Enter' || k === ' ' || (k.length === 1 && 'aAzZjJ'.includes(k));
+}
+
+/** Keyboard navigation (arrows + Enter/Space/A/Z) across a list of buttons. */
 export class MenuNav {
   index = 0;
   constructor(
@@ -110,11 +115,11 @@ export class MenuNav {
     if (!this.scene.scene.isActive()) return;
     const k = ev.key;
     const n = this.buttons.length;
-    if (k === 'ArrowDown' || k === 's' || k === 'S') this.move(this.cols);
-    else if (k === 'ArrowUp' || k === 'w' || k === 'W') this.move(-this.cols);
-    else if (k === 'ArrowRight' || k === 'd' || k === 'D') this.move(this.cols > 1 ? 1 : 0);
-    else if (k === 'ArrowLeft' || k === 'a' || k === 'A') this.move(this.cols > 1 ? -1 : 0);
-    else if (k === 'Enter' || k === ' ' || k === 'j' || k === 'J') this.buttons[this.index]?.activate();
+    if (k === 'ArrowDown') this.move(this.cols);
+    else if (k === 'ArrowUp') this.move(-this.cols);
+    else if (k === 'ArrowRight') this.move(this.cols > 1 ? 1 : 0);
+    else if (k === 'ArrowLeft') this.move(this.cols > 1 ? -1 : 0);
+    else if (isConfirmKey(k)) this.buttons[this.index]?.activate();
     else if (k === 'Escape' || k === 'Backspace') this.onBack?.();
     void n;
   }

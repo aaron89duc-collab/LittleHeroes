@@ -144,7 +144,7 @@ const PAINTERS: Record<StageTheme, Painter> = {
       skyline(ctx, w, 480, 100, 260, '#1b1030', 'rgba(255,170,90,0.8)');
     },
     mid: (ctx, w, gy) => {
-      const signs = [['PHỞ 24H', '#ff4fa3'], ['KARAOKE', '#3fd5ff'], ['CÀ PHÊ', '#ffd23f'], ['TẠP HÓA', '#7dff6a'], ['BÁNH MÌ', '#ff8a3d']];
+      const signs = [['PHỞ 24H', '#ff4fa3'], ['TRÀ SỮA', '#3fd5ff'], ['CÀ PHÊ', '#ffd23f'], ['TẠP HÓA', '#7dff6a'], ['BÁNH MÌ', '#ff8a3d']];
       let x = 0;
       let i = 0;
       while (x < w) {

@@ -5,7 +5,6 @@ import { paintBackground } from './BackgroundArt';
 import { paintEffects, paintPickups, paintProceduralHeads, paintProps } from './MiscArt';
 import { paintPartSet, paintTail, type PartSpec } from './PartArt';
 import userAssets from '../config/userAssets.json';
-import { loadSpriteSheets } from '../rig/SpriteView';
 
 /** Head textures: reference-art crops (loaded as PNG) + procedural ones. */
 export interface HeadInfo {
@@ -137,7 +136,7 @@ function loadUserAssets(scene: Phaser.Scene): void {
   }
   for (const [key, file] of Object.entries(userAssets.icons as Record<string, string>)) scene.load.image(key, file);
   (userAssets.commander as string[]).forEach((file, i) => scene.load.image(`commander-${i + 1}`, file));
-  loadSpriteSheets(scene);
+  // enemy/boss sheets are loaded per stage (systems/StageAssets.ts) to keep GPU memory low
 }
 
 /** Paint everything procedural. Missing reference images are replaced with placeholders + a console warning. */

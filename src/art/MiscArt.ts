@@ -369,20 +369,59 @@ export function paintPickups(scene: Phaser.Scene): void {
 
 /** Props used by hazards & mechanics. */
 export function paintProps(scene: Phaser.Scene): void {
-  // street sign (falling object)
+  // flower pot knocked off a balcony (falling object)
   {
     const { ctx, tex } = makeCanvas(scene, 'prop-sign', 70 * R, 60 * R);
-    roundRect(ctx, 4 * R, 4 * R, 62 * R, 36 * R, 5 * R);
-    ctx.fillStyle = '#ff3d7f';
+    // leaves
+    ctx.fillStyle = '#3fae4a';
+    for (const [x, y, rx, ry, rot] of [
+      [22, 18, 9, 5, -0.6],
+      [48, 18, 9, 5, 0.6],
+      [35, 12, 6, 10, 0],
+      [27, 24, 8, 4, -0.3],
+      [43, 24, 8, 4, 0.3],
+    ]) {
+      ctx.beginPath();
+      ctx.ellipse(x * R, y * R, rx * R, ry * R, rot, 0, Math.PI * 2);
+      ctx.fill();
+      outline(ctx, 1.6);
+    }
+    // flowers
+    for (const [x, y, c] of [
+      [24, 10, '#ff5a8a'],
+      [46, 10, '#ffd23f'],
+      [35, 5, '#ff7a3d'],
+    ] as Array<[number, number, string]>) {
+      ctx.fillStyle = c;
+      for (let k = 0; k < 5; k++) {
+        const ang = (k / 5) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc((x + Math.cos(ang) * 3.4) * R, (y + Math.sin(ang) * 3.4) * R, 2.8 * R, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#fff6c8';
+      ctx.beginPath();
+      ctx.arc(x * R, y * R, 2 * R, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // terracotta pot
+    ctx.beginPath();
+    ctx.moveTo(14 * R, 28 * R);
+    ctx.lineTo(56 * R, 28 * R);
+    ctx.lineTo(50 * R, 57 * R);
+    ctx.lineTo(20 * R, 57 * R);
+    ctx.closePath();
+    const g = ctx.createLinearGradient(14 * R, 0, 56 * R, 0);
+    g.addColorStop(0, '#e0743c');
+    g.addColorStop(0.5, '#f29a5c');
+    g.addColorStop(1, '#b8532a');
+    ctx.fillStyle = g;
     ctx.fill();
     outline(ctx);
-    ctx.fillStyle = '#fff';
-    ctx.font = `bold ${13 * R}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.fillText('KARAOKE', 35 * R, 27 * R);
-    ctx.fillStyle = '#555';
-    ctx.fillRect(18 * R, 40 * R, 4 * R, 18 * R);
-    ctx.fillRect(48 * R, 40 * R, 4 * R, 18 * R);
+    roundRect(ctx, 10 * R, 25 * R, 50 * R, 9 * R, 3 * R);
+    ctx.fillStyle = '#c95f30';
+    ctx.fill();
+    outline(ctx);
     tex.refresh();
   }
   // icicle

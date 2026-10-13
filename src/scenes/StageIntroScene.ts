@@ -3,7 +3,8 @@ import { paintBackground } from '../art/registry';
 import { getStage } from '../config/stages';
 import { FONT, GAME_H, GAME_W, BASE_W, UI_OFFSET } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
-import { panel, title } from '../ui/MenuComponents';
+import { prepareStageSprites } from '../systems/StageAssets';
+import { isConfirmKey, panel, title } from '../ui/MenuComponents';
 
 const BRIEF = [
   'Bọn côn đồ đang quấy phá phố đêm. Nhớ cứu người dân!',
@@ -39,6 +40,7 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   create(): void {
+    prepareStageSprites(this, getStage(this.d.stageId), true);
     this.cameras.main.setScroll(-UI_OFFSET, 0);
     const s = getStage(this.d.stageId);
     const bg = paintBackground(this, s.theme);
@@ -80,7 +82,7 @@ export class StageIntroScene extends Phaser.Scene {
       .text(640, 590, 'Nhấn ENTER hoặc chạm màn hình để bắt đầu', { fontFamily: FONT, fontSize: '28px', fontStyle: '800', color: '#ffffff', stroke: '#b3261e', strokeThickness: 6 })
       .setOrigin(0.5);
     this.tweens.add({ targets: go, alpha: 0.4, yoyo: true, repeat: -1, duration: 600 });
-    this.add.text(640, 630, 'J đánh • K kỹ năng • I đổi kỹ năng • L né • Space nhảy • U tuyệt kỹ • Esc tạm dừng', { fontFamily: FONT, fontSize: '17px', color: '#c9d6ff' }).setOrigin(0.5);
+    this.add.text(640, 630, '◀▲▼▶ di chuyển • A đánh • S kỹ năng • C đổi kỹ năng • D né • Z nhảy • X tuyệt kỹ • Esc tạm dừng', { fontFamily: FONT, fontSize: '17px', color: '#c9d6ff' }).setOrigin(0.5);
 
     const start = (): void => {
       if (this.started) return;
@@ -93,7 +95,7 @@ export class StageIntroScene extends Phaser.Scene {
     this.time.delayedCall(350, () => {
       this.input.once('pointerdown', start);
       this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'j' || e.key === 'J') start();
+        if (isConfirmKey(e.key)) start();
         if (e.key === 'Escape') this.scene.start('MenuScene');
       });
     });

@@ -18,13 +18,44 @@ export const SPRITES = userAssets.sprites as Record<string, SpriteDef>;
 const LOOPING = new Set(['idle', 'walk']);
 const PIXEL_ART = new Set(['cyber1', 'cyber2', 'cyber3', 'satyr1', 'satyr2', 'satyr3', 'gorgon1', 'gorgon2', 'gorgon3']);
 
-/** Load every sprite sheet from the user's asset packs (call from a scene's preload). */
-export function loadSpriteSheets(scene: Phaser.Scene): void {
-  for (const [key, def] of Object.entries(SPRITES)) {
+/**
+ * Queue sprite sheets for loading (all of them, or only `keys`). Sheets already in the texture manager are skipped.
+ * Returns how many files were queued.
+ */
+export function loadSpriteSheets(scene: Phaser.Scene, keys?: Iterable<string>): number {
+  let n = 0;
+  for (const key of keys ?? Object.keys(SPRITES)) {
+    const def = SPRITES[key];
+    if (!def) continue;
     for (const [anim, a] of Object.entries(def.anims)) {
-      scene.load.spritesheet(`spr-${key}-${anim}`, a.file, { frameWidth: def.frameW, frameHeight: def.frameH });
+      const tex = `spr-${key}-${anim}`;
+      if (scene.textures.exists(tex)) continue;
+      scene.load.spritesheet(tex, a.file, { frameWidth: def.frameW, frameHeight: def.frameH });
+      n++;
     }
   }
+  return n;
+}
+
+/**
+ * Free the GPU memory of sheets a stage does not use. Keeping every enemy/boss sheet resident (~150 MB of
+ * textures) made weaker GPUs/phones drop textures, which then render as black squares.
+ */
+export function unloadSpriteSheets(scene: Phaser.Scene, keep: Set<string>): void {
+  for (const [key, def] of Object.entries(SPRITES)) {
+    if (keep.has(key)) continue;
+    for (const anim of Object.keys(def.anims)) {
+      const k = `${key}-${anim}`;
+      if (scene.anims.exists(k)) scene.anims.remove(k);
+      if (scene.textures.exists(`spr-${k}`)) scene.textures.remove(`spr-${k}`);
+    }
+  }
+}
+
+/** True when every sheet of this sprite is loaded (otherwise the caller should fall back to a procedural body). */
+export function spriteReady(scene: Phaser.Scene, key: string): boolean {
+  const def = SPRITES[key];
+  return !!def && Object.keys(def.anims).every((a) => scene.textures.exists(`spr-${key}-${a}`) && scene.textures.get(`spr-${key}-${a}`).key !== '__MISSING');
 }
 
 /** Register Phaser animations once the sheets are loaded. */

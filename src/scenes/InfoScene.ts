@@ -4,12 +4,12 @@ import { Backdrop } from '../ui/Backdrop';
 import { MenuButton, MenuNav, panel, title } from '../ui/MenuComponents';
 
 const HELP = [
-  ['Di chuyển', 'A/D hoặc ◀▶: trái/phải • W/S hoặc ▲▼: tiến/lùi • Cảm ứng: joystick bên trái'],
-  ['Đánh thường (J)', 'Nhấn liên tiếp để nối combo 3 đòn. Combo đứt nếu quá 0,7 giây không đánh tiếp.'],
-  ['Nhảy (Space)', 'Nhấn J khi đang nhảy để tung đòn trên không. Nhảy để tránh sóng xung kích và laser.'],
-  ['Né (L)', 'Lướt nhanh có khung bất tử ngắn. Hồi chiêu 0,55 giây.'],
-  ['Kỹ năng (K)', 'Dùng kỹ năng đang chọn, tốn năng lượng (EN). Đổi kỹ năng bằng I/Q hoặc phím 1-2-3.'],
-  ['Tuyệt kỹ (U)', 'Khi thanh EN đầy 100: tung chiêu cuối cực mạnh, bất tử trong lúc thi triển.'],
+  ['Di chuyển', '◀▶: trái/phải • ▲▼: tiến/lùi • Cảm ứng: joystick bên trái'],
+  ['Đánh thường (A)', 'Nhấn liên tiếp để nối combo 3 đòn. Combo đứt nếu quá 0,7 giây không đánh tiếp.'],
+  ['Nhảy (Z / Space)', 'Nhấn A khi đang nhảy để tung đòn trên không. Nhảy để tránh sóng xung kích và laser.'],
+  ['Né (D)', 'Lướt nhanh có khung bất tử ngắn. Hồi chiêu 0,55 giây.'],
+  ['Kỹ năng (S)', 'Dùng kỹ năng đang chọn, tốn năng lượng (EN). Đổi kỹ năng bằng C hoặc phím 1-2-3.'],
+  ['Tuyệt kỹ (X)', 'Khi thanh EN đầy 100: tung chiêu cuối cực mạnh, bất tử trong lúc thi triển.'],
   ['Năng lượng', 'Đánh trúng +4 EN, đòn kết +7 EN, bị đánh +2 EN. Nhặt cầu xanh để +20 EN.'],
   ['Vật phẩm', 'Cầu đỏ +25 HP • Cầu xanh +20 EN • Ngôi sao +100 điểm.'],
   ['Cảnh báo', 'Vùng có dấu "!" và viền nhấp nháy sắp bị tấn công — hãy né ra ngoài!'],

@@ -7,7 +7,7 @@ import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import type { CharacterId } from '../types/game';
 import { Backdrop } from '../ui/Backdrop';
-import { MenuButton, title } from '../ui/MenuComponents';
+import { isConfirmKey, MenuButton, title } from '../ui/MenuComponents';
 
 interface SelectData {
   next?: 'stage' | 'menu';
@@ -78,9 +78,9 @@ export class CharacterSelectScene extends Phaser.Scene {
     const kb = this.input.keyboard;
     kb?.on('keydown', (ev: KeyboardEvent) => {
       AudioSystem.get().unlock();
-      if (ev.key === 'ArrowLeft' || ev.key === 'a' || ev.key === 'A') this.select((this.index + 2) % 3);
-      else if (ev.key === 'ArrowRight' || ev.key === 'd' || ev.key === 'D') this.select((this.index + 1) % 3);
-      else if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'j' || ev.key === 'J') this.confirm();
+      if (ev.key === 'ArrowLeft') this.select((this.index + 2) % 3);
+      else if (ev.key === 'ArrowRight') this.select((this.index + 1) % 3);
+      else if (isConfirmKey(ev.key)) this.confirm();
       else if (ev.key === 'Escape' || ev.key === 'Backspace') this.goBack();
     });
     this.select(this.index, true);
@@ -141,12 +141,12 @@ export class CharacterSelectScene extends Phaser.Scene {
     this.info.add(sk);
     [...c.skills, c.ultimate].forEach((mid, k) => {
       const m = getMove(mid);
-      const key = k < 3 ? `K (${k + 1})` : 'U';
+      const key = k < 3 ? `S (${k + 1})` : 'X';
       const t = this.add.text(x0 + 30, 416 + k * 30, `${key}  ${m.name}`, { fontFamily: FONT, fontSize: '18px', color: k === 3 ? '#ffd23f' : '#ffffff' });
       const cost = this.add.text(x0 + 300, 416 + k * 30, `${m.energyCost} EN • ${m.baseDamage} dmg`, { fontFamily: FONT, fontSize: '16px', color: '#9ad0ff' });
       this.info.add([t, cost]);
     });
-    const combo = this.add.text(x0 + 30, 546, `Combo J-J-J: ${c.lightChain.map((x) => getMove(x).name).join(' → ')}`, {
+    const combo = this.add.text(x0 + 30, 546, `Combo A-A-A: ${c.lightChain.map((x) => getMove(x).name).join(' → ')}`, {
       fontFamily: FONT,
       fontSize: '16px',
       color: '#c9d6ff',

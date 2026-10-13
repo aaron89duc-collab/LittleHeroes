@@ -7,6 +7,8 @@ import { GameWorld } from '../systems/GameWorld';
 import { InputSystem } from '../systems/InputSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { StageManager } from '../systems/StageManager';
+import { prepareStageSprites } from '../systems/StageAssets';
+import { createSpriteAnims } from '../rig/SpriteView';
 import type { StageConfig } from '../types/game';
 import type { HUDScene } from './HUDScene';
 
@@ -41,7 +43,16 @@ export class GameScene extends Phaser.Scene {
     this.weather = null;
   }
 
+  preload(): void {
+    // usually already fetched while the stage briefing was on screen
+    prepareStageSprites(this, getStage(this.d.stageId));
+    const t = this.add.text(GAME_W / 2, GAME_H / 2, 'Đang tải…', { fontFamily: FONT, fontSize: '28px', color: '#ffd23f' }).setOrigin(0.5);
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => t.destroy());
+    if (!this.load.list.size) t.destroy();
+  }
+
   create(): void {
+    createSpriteAnims(this);
     const base = getStage(this.d.stageId);
     this.stage = this.d.hard ? { ...base, enemyHpMul: base.enemyHpMul * 1.5, enemyDmgMul: base.enemyDmgMul * 1.4 } : base;
     const save = SaveSystem.get();
@@ -172,8 +183,9 @@ export class GameScene extends Phaser.Scene {
     this.world.update(dt, input);
     this.sm.update(Math.min(dt, 50));
     const sx = this.cameras.main.scrollX;
-    this.far.tilePositionX = sx * 0.12;
-    this.mid.tilePositionX = sx * 0.5;
+    // mid (buildings/props) and floor come from one composed picture: scroll them together so they never split
+    this.far.tilePositionX = sx * 0.2;
+    this.mid.tilePositionX = sx;
     this.floor.tilePositionX = sx;
     // combo counter near (not over) the hero
     const p = this.world.player;

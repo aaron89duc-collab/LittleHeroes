@@ -2,7 +2,7 @@ import { HEADS } from '../art/registry';
 import { BossAI } from '../ai/BossAI';
 import { CreatureView } from '../rig/CreatureView';
 import { Rig } from '../rig/Rig';
-import { SpriteView } from '../rig/SpriteView';
+import { SpriteView, spriteReady } from '../rig/SpriteView';
 import type { BossConfig, BossPhase } from '../types/game';
 import type { HitEvent, HitResult } from '../types/world';
 import { Actor } from './Actor';
@@ -16,7 +16,7 @@ export interface BossWorldApi extends GameWorldApi {
 }
 
 function makeBossView(w: GameWorldApi, cfg: BossConfig, rigOverride?: string): Rig | CreatureView | SpriteView {
-  if (cfg.sprite) return new SpriteView(w.scene, cfg.sprite.key, cfg.sprite.scale, cfg.sprite.tint);
+  if (cfg.sprite && spriteReady(w.scene, cfg.sprite.key)) return new SpriteView(w.scene, cfg.sprite.key, cfg.sprite.scale, cfg.sprite.tint);
   if (cfg.body === 'spider' || cfg.body === 'crab' || cfg.body === 'bat') {
     return new CreatureView(w.scene, cfg.body, cfg.scale * (cfg.body === 'bat' ? 1 : 1.1), cfg.palette);
   }
@@ -103,7 +103,7 @@ export class Boss extends Actor {
     this.transformed = true;
     const old = this.view;
     const ts = this.cfg.transformSprite;
-    const rig = ts
+    const rig = ts && spriteReady(this.w.scene, ts.key)
       ? new SpriteView(this.w.scene, ts.key, ts.scale, ts.tint)
       : new Rig(this.w.scene, {
       partKey: 'rig-darkBeast',
