@@ -23,6 +23,8 @@ const BINDINGS: Record<KeyName, number[]> = {
 /** Keyboard bindings: arrows move, A đánh, S kỹ năng, D né, Z nhảy, X tuyệt kỹ, C (or 1-3) đổi kỹ năng. */
 export class KeyboardController {
   private keys = new Map<KeyName, Phaser.Input.Keyboard.Key[]>();
+  /** taps that went down and up between two frames would be lost by JustDown alone */
+  private latched = new Set<KeyName>();
 
   constructor(scene: Phaser.Scene) {
     const kb = scene.input.keyboard;
@@ -30,6 +32,10 @@ export class KeyboardController {
     for (const [name, codes] of Object.entries(BINDINGS) as Array<[KeyName, number[]]>) {
       this.keys.set(name, codes.map((c) => kb.addKey(c, true, false)));
     }
+    kb.on('keydown', (ev: KeyboardEvent) => {
+      if (ev.repeat) return;
+      for (const [name, codes] of Object.entries(BINDINGS) as Array<[KeyName, number[]]>) if (codes.includes(ev.keyCode)) this.latched.add(name);
+    });
   }
 
   down(name: KeyName): boolean {
@@ -37,7 +43,7 @@ export class KeyboardController {
   }
 
   pressed(name: KeyName): boolean {
-    let any = false;
+    let any = this.latched.delete(name);
     for (const k of this.keys.get(name) ?? []) if (Phaser.Input.Keyboard.JustDown(k)) any = true;
     return any;
   }

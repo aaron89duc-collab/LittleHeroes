@@ -23,7 +23,7 @@ export class EnemyAI {
   }
 
   private get p() {
-    return this.e.w.player;
+    return this.e.w.targetFor(this.e);
   }
 
   private moveToward(tx: number, ty: number, speed: number, dt: number): boolean {

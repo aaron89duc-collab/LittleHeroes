@@ -115,6 +115,14 @@ export class AudioSystem {
   private musicSrc: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
   private musicToken = 0;
 
+  /** Online co-op host: every SFX played is also forwarded to the guest. */
+  tap: ((name: Sfx) => void) | null = null;
+
+  /** Index of the current music slot (-1 = none). */
+  get musicIndex(): number {
+    return this.trackIndex;
+  }
+
   static get(): AudioSystem {
     if (!AudioSystem.inst) AudioSystem.inst = new AudioSystem();
     return AudioSystem.inst;
@@ -396,6 +404,7 @@ export class AudioSystem {
   }
 
   play(name: Sfx): void {
+    if (this.tap && name !== 'ui' && name !== 'confirm') this.tap(name);
     const ctx = this.ctx;
     if (!ctx || ctx.state !== 'running') return;
     const now = ctx.currentTime;

@@ -30,8 +30,8 @@ export class Npc {
     this.rig.update(dt);
     if (!this.rescued) {
       this.rig.setWobble(0.8);
-      const p = this.w.player;
-      if (p.alive && Math.abs(p.x - this.x) < 70 && Math.abs(p.y - this.y) < 40) {
+      const p = this.w.players.find((q) => q.alive && Math.abs(q.x - this.x) < 70 && Math.abs(q.y - this.y) < 40);
+      if (p) {
         this.rescued = true;
         this.rig.setWobble(0);
         this.rig.hold('cheer', VICTORY, 120);

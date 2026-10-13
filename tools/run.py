@@ -13,7 +13,7 @@ async def main():
         await pg.route('**/fonts.googleapis.com/**', lambda r: r.abort())
         if os.environ.get('HERO'):  # play as a given hero (dau-dau / shu-shu / bap)
             await pg.add_init_script("localStorage.setItem('little-heroes-save-v1', JSON.stringify({version: 1, selectedCharacter: '%s'}))" % os.environ['HERO'])
-        await pg.goto(os.environ.get('BASE','http://127.0.0.1:4173/') + '?renderer=canvas' + os.environ.get('EXTRA',''), timeout=20000)
+        await pg.goto(os.environ.get('BASE','http://127.0.0.1:4173/') + ('?x=1' if os.environ.get('GL') else '?renderer=canvas') + os.environ.get('EXTRA',''), timeout=20000)
         cdp = await pg.context.new_cdp_session(pg)
         for _ in range(60):  # wait until preload finished (menu visible)
             await pg.wait_for_timeout(500)

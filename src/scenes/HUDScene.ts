@@ -5,7 +5,51 @@ import { TouchController } from '../input/TouchController';
 import { fullscreenSupported, toggleFullscreen } from '../systems/Fullscreen';
 import { SaveSystem } from '../systems/SaveSystem';
 import { makeTouchButton, type TouchButtonView, VirtualJoystick } from '../ui/VirtualJoystick';
-import type { GameScene } from './GameScene';
+import type { CharacterId } from '../types/game';
+
+/** What the HUD needs from a hero (a real Player on the host, a snapshot-fed stand-in on the co-op guest). */
+export interface HudPlayer {
+  stats: { id: CharacterId; displayName: string; ultimate: string; palette: { suit: number } };
+  skillIds: readonly string[];
+  hp: number;
+  maxHp: number;
+  alive: boolean;
+  energy: { current: number; max: number };
+  selectedSkill: number;
+  selectedSkillMove: { energyCost: number };
+  skillCooldownLeft: number;
+  dodgeCooldownLeft: number;
+}
+
+export interface HudBoss {
+  hp: number;
+  maxHp: number;
+  alive: boolean;
+  shieldMul: number;
+  curlArmor: boolean;
+  enraged: boolean;
+  phaseIndex: number;
+  cfg: { name: string; phases: ReadonlyArray<{ hpBelow: number }> };
+}
+
+/** Data source of the HUD: GameScene (single player / co-op host) or CoopGuestScene. */
+export interface HudSource {
+  world: { player: HudPlayer; score: number };
+  stage: { id: number; name: string };
+  sm: {
+    lives: number;
+    state: string;
+    isBossFight: boolean;
+    waveInfo: { index: number; total: number; remaining: number } | null;
+    bosses: ReadonlyArray<HudBoss>;
+  };
+  /** online partner shown under the hero's bars */
+  hudPartner(): HudPlayer | null;
+  /** label of the partner panel ('P2' on the host, 'P1' on the guest) */
+  hudPartnerTag?(): string;
+  /** small status line (co-op ping / waiting) */
+  hudNote?(): string;
+}
 
 /**
  * Screen-space HUD (separate scene so camera shake never moves it). GDD §12.3:
@@ -18,7 +62,11 @@ function setTxt(t: Phaser.GameObjects.Text, text: string, color?: string): void 
 }
 
 export class HUDScene extends Phaser.Scene {
-  private game_!: GameScene;
+  private game_!: HudSource;
+  private partnerFace: Phaser.GameObjects.Image | null = null;
+  private partnerRing: Phaser.GameObjects.Arc | null = null;
+  private partnerName: Phaser.GameObjects.Text | null = null;
+  private noteText!: Phaser.GameObjects.Text;
   private g!: Phaser.GameObjects.Graphics;
   private hpText!: Phaser.GameObjects.Text;
   private enText!: Phaser.GameObjects.Text;
@@ -43,8 +91,11 @@ export class HUDScene extends Phaser.Scene {
     super('HUDScene');
   }
 
-  init(d: { game: GameScene }): void {
+  init(d: { game: HudSource }): void {
     this.game_ = d.game;
+    this.partnerFace = null;
+    this.partnerRing = null;
+    this.partnerName = null;
     this.bossNames = [];
     this.skillTexts = [];
     this.touchButtons = [];
@@ -70,7 +121,15 @@ export class HUDScene extends Phaser.Scene {
     this.add.text(134, 12, p.stats.displayName, st(26));
     this.hpText = this.add.text(140, 46, '', st(15)).setDepth(2);
     this.enText = this.add.text(140, 76, '', st(13, '#d8ecff')).setDepth(2);
-    this.ultReady = this.add.text(136, 96, 'U: TUYỆT KỸ SẴN SÀNG!', st(16, '#ffd23f')).setVisible(false);
+    this.ultReady = this.add.text(136, 96, 'X: TUYỆT KỸ SẴN SÀNG!', st(16, '#ffd23f')).setVisible(false);
+    // co-op partner (small panel under our bars)
+    const mate = gm.hudPartner();
+    if (mate) {
+      this.partnerRing = this.add.circle(34, 158, 24, mate.stats.palette.suit).setStrokeStyle(3, 0x3fd5ff);
+      this.partnerFace = this.add.image(34, 158, `face-${mate.stats.id}`).setDisplaySize(46, 46);
+      this.partnerName = this.add.text(64, 136, `${gm.hudPartnerTag?.() ?? 'P2'} ${mate.stats.displayName}`, st(15, '#bff0ff'));
+    }
+    this.noteText = this.add.text(12, 190, '', st(13, '#bff0ff', '600'));
     this.tweens.add({ targets: this.ultReady, alpha: 0.4, yoyo: true, repeat: -1, duration: 350 });
     this.scoreText = this.add.text(GAME_W - 20, 10, '', st(30, '#ffd23f')).setOrigin(1, 0);
     this.livesText = this.add.text(GAME_W - 20, 48, '', st(24, '#ff6b8a')).setOrigin(1, 0);
@@ -198,8 +257,29 @@ export class HUDScene extends Phaser.Scene {
       this.waveText.setVisible(!!wave);
       setTxt(this.waveText, wave ? `ĐỢT ${wave.index}/${wave.total} • Còn ${wave.remaining} địch` : '');
     }
+    this.drawPartner(g);
     this.drawSkills(g);
     this.drawTouchState(g);
+  }
+
+  private drawPartner(g: Phaser.GameObjects.Graphics): void {
+    const gm = this.game_;
+    setTxt(this.noteText, gm.hudNote?.() ?? '');
+    const m = gm.hudPartner();
+    if (!this.partnerName) return;
+    const show = !!m;
+    this.partnerFace?.setVisible(show).setAlpha(m?.alive ? 1 : 0.4);
+    this.partnerRing?.setVisible(show);
+    this.partnerName.setVisible(show);
+    if (!m) return;
+    const k = Phaser.Math.Clamp(m.hp / m.maxHp, 0, 1);
+    g.fillStyle(0x0b1230, 0.85).fillRoundedRect(62, 158, 170, 14, 6);
+    g.fillStyle(!m.alive ? 0x555555 : k < 0.3 ? 0xff3b3b : 0x3fd5ff, 1).fillRoundedRect(64, 160, 166 * k, 10, 5);
+    g.lineStyle(2, 0xffffff, 0.7).strokeRoundedRect(62, 158, 170, 14, 6);
+    const ek = m.energy.current / m.energy.max;
+    g.fillStyle(ek >= 1 ? 0xffd23f : 0x3fa9ff, 0.9).fillRect(64, 175, 166 * ek, 4);
+    const tag = gm.hudPartnerTag?.() ?? 'P2';
+    setTxt(this.partnerName, m.alive ? `${tag} ${m.stats.displayName}` : `${tag} ${m.stats.displayName} — GỤC`);
   }
 
   private drawSkills(g: Phaser.GameObjects.Graphics): void {

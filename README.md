@@ -38,6 +38,14 @@ vercel --prod   # deploy production
 
 Game là web tĩnh (không cần backend/database). Tiến trình và cài đặt được lưu bằng `localStorage`.
 
+## Chơi Co-op online (2 người)
+
+Menu → **🤝 Chơi cùng bạn (online)** → một người **Tạo phòng**, gửi mã/link mời cho người kia.
+Hai máy kết nối thẳng với nhau (WebRTC qua PeerJS), máy chủ phòng chạy trận đấu, Vercel chỉ phát game
+và chạy hàm nhỏ `api/ice.ts` (danh sách STUN/TURN).
+
+Hướng dẫn đầy đủ (TURN miễn phí, luật chơi, sửa lỗi): **[docs/COOP.md](docs/COOP.md)**.
+
 ## Điều khiển
 
 | Hành động | Bàn phím | Cảm ứng |

@@ -14,6 +14,7 @@ const HELP = [
   ['Vật phẩm', 'Cầu đỏ +25 HP • Cầu xanh +20 EN • Ngôi sao +100 điểm.'],
   ['Cảnh báo', 'Vùng có dấu "!" và viền nhấp nháy sắp bị tấn công — hãy né ra ngoài!'],
   ['Tạm dừng', 'Esc / P hoặc nút II trên màn hình.'],
+  ['Co-op online', 'Menu → Chơi cùng bạn → Tạo phòng, gửi mã. Đứng cạnh đồng đội bị gục để đỡ dậy.'],
 ];
 
 const CREDITS = [
@@ -42,8 +43,8 @@ export class InfoScene extends Phaser.Scene {
     if (d.page === 'help') {
       title(this, 640, 82, 'HƯỚNG DẪN', 40);
       HELP.forEach(([k, v], i) => {
-        this.add.text(120, 126 + i * 46, k, { fontFamily: FONT, fontSize: '21px', fontStyle: '800', color: '#ffd23f' });
-        this.add.text(360, 126 + i * 46, v, { fontFamily: FONT, fontSize: '19px', color: '#ffffff', wordWrap: { width: 800 } });
+        this.add.text(120, 122 + i * 42, k, { fontFamily: FONT, fontSize: '21px', fontStyle: '800', color: '#ffd23f' });
+        this.add.text(360, 124 + i * 42, v, { fontFamily: FONT, fontSize: '19px', color: '#ffffff', wordWrap: { width: 800 } });
       });
     } else {
       title(this, 640, 82, 'CREDITS', 40);

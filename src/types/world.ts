@@ -58,6 +58,7 @@ export interface WorldLike {
   readonly audio: AudioSystem;
   readonly settings: SaveSettings;
   bounds(actor?: { team: 'hero' | 'enemy' | 'object' }): WorldBounds;
-  shake(intensity: number, ms: number): void;
+  /** `only`: 0 = host screen only, 1 = co-op guest screen only, undefined = everyone */
+  shake(intensity: number, ms: number, only?: number): void;
   hitStop(ms: number): void;
 }

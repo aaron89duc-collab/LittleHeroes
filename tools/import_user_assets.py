@@ -46,10 +46,24 @@ for theme, city in THEME_CITY.items():
     far_full.convert('RGB').save(os.path.join(bgdir, f'bg-{theme}-far.png'))
     mid = comp(city, L['mid']).crop((0, top, 1920, G)).resize((w, FLOOR_TOP), Image.LANCZOS)
     mid.save(os.path.join(bgdir, f'bg-{theme}-mid.png'))
+    # Floor strip: same uniform scale as the mid layer, so its top 40 px line up exactly with the bottom of
+    # the mid layer (both scroll at camera speed in GameScene). Below the source image the road is continued
+    # by mirroring its bottom rows, which keeps it seamless without stretching the pixel art.
     road_top = int(G - 40 / S)
-    allc = comp(city, L['far'] + L['mid'] + L['road'])
-    floor = allc.crop((0, road_top, 1920, 1080)).resize((w, GAME_H - FLOOR_TOP + 40), Image.LANCZOS)
-    floor.convert('RGB').save(os.path.join(bgdir, f'bg-{theme}-floor.png'))
+    allc = comp(city, L['far'] + L['mid'] + L['road']).convert('RGB')
+    part = allc.crop((0, road_top, 1920, 1080))
+    part = part.resize((w, round(part.height * S)), Image.LANCZOS)
+    FH = GAME_H - FLOOR_TOP + 40
+    floor = Image.new('RGB', (w, FH))
+    floor.paste(part, (0, 0))
+    y = part.height
+    k = max(24, part.height // 3)
+    strip = part.crop((0, part.height - k, w, part.height))
+    flip = True
+    while y < FH:
+        floor.paste(strip.transpose(Image.FLIP_TOP_BOTTOM) if flip else strip, (0, y))
+        y += k; flip = not flip
+    floor.save(os.path.join(bgdir, f'bg-{theme}-floor.png'))
     manifest['backgrounds'][theme] = {'far': f'assets/backgrounds/bg-{theme}-far.png', 'mid': f'assets/backgrounds/bg-{theme}-mid.png', 'floor': f'assets/backgrounds/bg-{theme}-floor.png', 'source': city}
     # stage card
     card = Image.open(glob.glob(os.path.join(CITY, city, 'Bright', city + '.png'))[0]).convert('RGB').resize((466, 262), Image.LANCZOS)

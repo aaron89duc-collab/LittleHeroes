@@ -4,7 +4,8 @@ import type { Actor } from '../entities/Actor';
 import type { Boss } from '../entities/Boss';
 import { Npc } from '../entities/Npc';
 import type { Pillar } from '../entities/Pillar';
-import { FLOOR_BOTTOM, FLOOR_TOP, GAME_W } from '../game/constants';
+import type { Player } from '../entities/Player';
+import { FLOOR_BOTTOM, FLOOR_TOP } from '../game/constants';
 import type { BossPhase, StageConfig } from '../types/game';
 import type { GameWorld } from './GameWorld';
 import { HazardSystem } from './HazardSystem';
@@ -50,6 +51,8 @@ export class StageManager {
   private bossIntroAt = 0;
   private healTick = 0;
   private bossShieldPillars = 0;
+  /** co-op: heroes that are down with no shared life left, waiting for their partner to help them up */
+  private downed = new Map<Player, number>();
 
   constructor(
     private scene: Phaser.Scene,
@@ -62,13 +65,13 @@ export class StageManager {
     this.arenas = stage.waves.map((_, i) => FIRST_ARENA + i * ARENA_STEP);
     this.restX = FIRST_ARENA + stage.waves.length * ARENA_STEP;
     this.bossX = this.restX + REST_LEN;
-    world.stageWidth = this.bossX + GAME_W;
+    world.stageWidth = this.bossX + world.viewW;
     this.hazards = new HazardSystem(world, stage.hazards, world.stageWidth);
     world.setEvents({
       enemyDefeated: (e) => this.onEnemyDefeated(e),
       bossDefeated: (b) => this.onBossDefeated(b),
       bossPhase: (b, p, i) => this.onBossPhase(b, p, i),
-      playerDefeated: () => this.onPlayerDefeated(),
+      playerDefeated: (p) => this.onPlayerDefeated(p),
     });
     world.onSpawnHook = () => {
       if (!this.fromTracker && this.state === 'wave') this.tracker?.addExtra();
@@ -94,9 +97,10 @@ export class StageManager {
   }
 
   init(): void {
-    const cam = this.world.cam;
-    cam.scrollX = Math.max(0, this.playerStartX - 300);
-    this.minScroll = cam.scrollX;
+    const w = this.world;
+    w.viewLeft = Math.max(0, this.playerStartX - 300);
+    this.minScroll = w.viewLeft;
+    w.syncCamera();
     this.hazards.active = !this.checkpointReached;
     if (this.checkpointReached) {
       this.restDone = true;
@@ -120,7 +124,7 @@ export class StageManager {
 
   update(dt: number): void {
     const w = this.world;
-    const p = w.player;
+    const leadX = w.leadX;
     // timers
     if (this.timers.length) {
       const due = this.timers.filter((t) => w.now >= t.at);
@@ -134,16 +138,16 @@ export class StageManager {
       case 'travel': {
         if (this.waveIndex < this.arenas.length) {
           const L = this.arenas[this.waveIndex];
-          if (p.x > L + 600) this.startWave();
+          if (leadX > L + 600) this.startWave();
         } else {
-          if (!this.restDone && p.x > this.restX + 200) {
+          if (!this.restDone && leadX > this.restX + 200) {
             this.restDone = true;
             this.checkpointReached = true;
             this.hazards.active = false;
             this.hud.banner('KHU AN TOÀN', 'Hồi sức trước trận đánh boss — Checkpoint!', '#7dff6a');
             this.dropRestPickups();
           }
-          if (p.x > this.bossX + 620) this.startBoss();
+          if (leadX > this.bossX + 620) this.startBoss();
         }
         break;
       }
@@ -175,24 +179,55 @@ export class StageManager {
       default:
         break;
     }
+    this.updateDowned(dt);
+  }
+
+  /** Co-op: stand next to a fallen partner for a moment to pull them back up (when no shared life is left). */
+  private updateDowned(dt: number): void {
+    if (!this.downed.size) return;
+    const w = this.world;
+    for (const [p, t] of this.downed) {
+      if (!w.players.includes(p)) {
+        this.downed.delete(p);
+        continue;
+      }
+      const helper = w.players.find((q) => q !== p && q.alive && Math.abs(q.x - p.x) < 80 && Math.abs(q.y - p.y) < 50);
+      const nt = helper ? t + dt : Math.max(0, t - dt * 0.5);
+      this.downed.set(p, nt);
+      if (helper && Math.floor(nt / 400) !== Math.floor(t / 400)) w.fx.text(p.x, p.y - 120, 'ĐANG ĐỠ DẬY…', '#7dff6a', 22);
+      if (nt >= 1600) {
+        this.downed.delete(p);
+        p.revive();
+        p.hp = Math.round(p.maxHp * 0.5);
+        this.hud.banner(`${p.stats.displayName} đã đứng dậy!`, 'Đồng đội cứu nhau!', '#7dff6a');
+      }
+    }
   }
 
   private updateCamera(dt: number): void {
     const w = this.world;
     const cam = w.cam;
-    const p = w.player;
+    const vw = w.viewW;
+    // follow the heroes' midpoint (just the hero in single player)
+    const ps = w.alivePlayers().length ? w.alivePlayers() : w.players;
+    const minX = Math.min(...ps.map((q) => q.x));
+    const maxX = Math.max(...ps.map((q) => q.x));
+    const focus = ps.length > 1 ? (minX + maxX) / 2 + 40 : maxX;
     let target: number;
     if (w.lock) target = w.lock.left;
-    else target = Phaser.Math.Clamp(p.x - 520, this.minScroll, w.stageWidth - GAME_W);
+    else target = Phaser.Math.Clamp(focus - vw * 0.406, this.minScroll, w.stageWidth - vw);
+    // never scroll a hero off the left edge
+    if (!w.lock && ps.length > 1) target = Math.min(target, Math.max(this.minScroll, minX - 60));
     const k = Math.min(1, dt * 0.007);
-    cam.scrollX += (target - cam.scrollX) * k;
-    if (!w.lock) this.minScroll = Math.max(this.minScroll, Math.min(cam.scrollX, p.x - GAME_W + 200));
+    w.viewLeft += (target - w.viewLeft) * k;
+    if (!w.lock) this.minScroll = Math.max(this.minScroll, Math.min(w.viewLeft, minX - vw + 200));
+    w.syncCamera();
     cam.scrollY = 0;
   }
 
   private startWave(): void {
     const L = this.arenas[this.waveIndex];
-    this.world.lock = { left: L, right: L + GAME_W };
+    this.world.lock = { left: L, right: L + this.world.viewW };
     this.tracker = new WaveTracker(this.stage.waves[this.waveIndex], 4);
     this.state = 'wave';
     this.spawnCooldown = 500;
@@ -214,7 +249,7 @@ export class StageManager {
 
   private dropRestPickups(): void {
     const w = this.world;
-    const x = this.checkpointReached && w.player.x > this.restX ? w.player.x + 260 : this.restX + 520;
+    const x = this.checkpointReached && w.leadX > this.restX ? w.leadX + 260 : this.restX + 520;
     w.dropPickup('health', x, 560);
     w.dropPickup('health', x + 60, 620);
     w.dropPickup('energy', x + 120, 560);
@@ -223,16 +258,16 @@ export class StageManager {
   private startBoss(): void {
     const w = this.world;
     const L = this.bossX;
-    w.lock = { left: L, right: L + GAME_W };
+    w.lock = { left: L, right: L + w.viewW };
     this.state = 'bossIntro';
     this.bossIntroAt = w.now + 1800;
     this.hazards.active = false;
     this.checkpointReached = true;
     const cfg = getBoss(this.stage.bossId);
-    const b1 = w.spawnBoss(cfg, L + GAME_W + 120, 580);
+    const b1 = w.spawnBoss(cfg, L + w.viewW + 120, 580);
     this.bosses = [b1];
     if (this.stage.secondBossId) {
-      const b2 = w.spawnBoss(getBoss(this.stage.secondBossId), L + GAME_W + 220, 500);
+      const b2 = w.spawnBoss(getBoss(this.stage.secondBossId), L + w.viewW + 220, 500);
       this.bosses.push(b2);
     }
     w.audio.play('roar');
@@ -341,27 +376,43 @@ export class StageManager {
     for (const pl of w.pillars) pl.destroy();
     this.after(300, () => {
       w.timeScale = 1;
-      w.player.celebrate();
+      for (const q of w.players) {
+        if (!q.alive) q.revive();
+        q.celebrate();
+      }
+      this.downed.clear();
     });
     this.after(2600, () => this.cb.onClear());
   }
 
-  private onPlayerDefeated(): void {
+  private onPlayerDefeated(p: Player): void {
     const w = this.world;
-    this.lives--;
-    this.state = this.lives > 0 ? this.state : 'gameover';
-    if (this.lives > 0) {
-      this.hud.banner(`Còn ${this.lives} mạng`, 'Đứng dậy nào!', '#ff8fa3');
+    if (this.state === 'victory' || this.state === 'gameover') return;
+    const partnerUp = w.players.some((q) => q !== p && q.alive);
+    if (this.lives > 1 || (w.coop && this.lives > 0 && partnerUp)) {
+      // shared lives: one is spent, the hero gets back up
+      this.lives--;
+      this.hud.banner(w.coop ? `${p.stats.displayName} gục! Còn ${this.lives} mạng` : `Còn ${this.lives} mạng`, 'Đứng dậy nào!', '#ff8fa3');
       this.after(1500, () => {
-        w.player.revive();
+        if (!w.players.includes(p) || this.state === 'gameover') return;
+        p.revive();
         for (const e of w.hostiles()) {
-          if (Math.abs(e.x - w.player.x) < 200 && !e.isBoss) e.vx = (e.x > w.player.x ? 1 : -1) * 400;
+          if (Math.abs(e.x - p.x) < 200 && !e.isBoss) e.vx = (e.x > p.x ? 1 : -1) * 400;
         }
       });
-    } else {
-      this.hazards.active = false;
-      this.after(1700, () => this.cb.onGameOver());
+      return;
     }
+    if (w.coop && partnerUp) {
+      // no life left but the partner still stands: wait to be helped up
+      this.lives = 0;
+      this.downed.set(p, 0);
+      this.hud.banner(`${p.stats.displayName} đã gục!`, 'Đứng cạnh đồng đội để đỡ dậy', '#ff8fa3');
+      return;
+    }
+    this.lives = 0;
+    this.state = 'gameover';
+    this.hazards.active = false;
+    this.after(1700, () => this.cb.onGameOver());
   }
 
   destroy(): void {

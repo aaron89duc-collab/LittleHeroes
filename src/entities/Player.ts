@@ -34,6 +34,8 @@ export class Player extends Actor {
   private walkDust = 0;
   private lastSkillAt = -9999;
   controlsLocked = false;
+  /** 0 = host/local hero, 1 = online partner */
+  slot = 0;
   hitsTaken = 0;
 
   constructor(protected w: GameWorldApi, id: CharacterId, x: number, y: number) {
@@ -98,8 +100,9 @@ export class Player extends Actor {
       this.w.audio.play('hurt');
       this.w.fx.hitSpark(this.x, this.y - this.z - 90, 0xff4d4d, e.heavy);
       this.w.fx.damageNumber(this.x, this.y - this.z - 150, r.damage, '#ff6b6b');
-      this.w.shake(e.heavy ? 0.008 : 0.004, e.heavy ? 180 : 90);
-      if (!this.settingsReduceFlash && e.heavy) this.w.fx.flashScreen(0xff0000, 120);
+      // only the screen of the hero who got hit shakes / flashes (matters in online co-op)
+      this.w.shake(e.heavy ? 0.008 : 0.004, e.heavy ? 180 : 90, this.slot);
+      if (!this.settingsReduceFlash && e.heavy) this.w.flashFor(this.slot, 0xff0000, 120);
     }
     return r;
   }
@@ -109,7 +112,7 @@ export class Player extends Actor {
   }
 
   protected applyFreeze(ms: number): void {
-    const m = ms * this.w.playerFreezeMultiplier();
+    const m = ms * this.w.playerFreezeMultiplier(this);
     this.frozenUntil = this.now + m;
     this.w.audio.play('freeze');
   }
@@ -117,7 +120,7 @@ export class Player extends Actor {
   protected onDefeated(): void {
     this.w.combat.cancelAttacksOf(this);
     this.w.audio.play('defeat');
-    this.w.onPlayerDefeated();
+    this.w.onPlayerDefeated(this);
   }
 
   /** Respawn after losing a life. */
@@ -361,7 +364,7 @@ export class Player extends Actor {
     else this.w.audio.play(heavy ? 'heavy' : m.anim.toLowerCase().includes('kick') ? 'kick' : 'punch');
     if (heavy) {
       this.w.hitStop(m.kind === 'ultimate' && idx < m.hits.length - 1 ? 40 : 70);
-      this.w.shake(0.005, 110);
+      this.w.shake(0.005, 110, this.slot);
     }
     this.w.addScore(res.damage * 10 + (count >= 5 ? count * 5 : 0));
   }
@@ -423,7 +426,7 @@ export class Player extends Actor {
         // Bắp stomp: shockwave on landing
         this.w.combat.startAttack({ owner: this, hits: [{ ...m.hits[0], at: 0, activeMs: 80 }], color: 0xff8a3d, heavy: true });
         this.w.fx.ring(this.x, this.y, 80, 0xff8a3d, 300);
-        this.w.shake(0.004, 120);
+        this.w.shake(0.004, 120, this.slot);
       }
       this.w.combat.cancelAttacksOf(this);
       this.currentMove = null;

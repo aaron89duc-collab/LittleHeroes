@@ -32,6 +32,9 @@ export class PreloadScene extends Phaser.Scene {
     registerHeroSheets(this);
     const s = SaveSystem.get().data.settings;
     AudioSystem.get().setVolumes(s.musicVolume, s.sfxVolume);
-    this.scene.start('MenuScene');
+    // invite link (…/?room=CODE): go straight to the co-op lobby and join
+    const room = new URLSearchParams(location.search).get('room');
+    if (room) this.scene.start('CoopLobbyScene', { join: room });
+    else this.scene.start('MenuScene');
   }
 }

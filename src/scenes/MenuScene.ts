@@ -81,12 +81,13 @@ export class MenuScene extends Phaser.Scene {
     const items: Array<[string, () => void, boolean?, string?]> = [
       ['Chơi mới', () => this.scene.start('CharacterSelectScene', { next: 'stage', stageId: 1 })],
       ['Tiếp tục', () => this.scene.start('StageSelectScene'), !hasProgress, hasProgress ? `Màn ${save.data.highestUnlockedStage} đã mở` : undefined],
+      ['🤝 Chơi cùng bạn (online)', () => this.scene.start('CoopLobbyScene', {})],
       ['Chọn nhân vật', () => this.scene.start('CharacterSelectScene', { next: 'menu' })],
       ['Hướng dẫn', () => this.scene.start('InfoScene', { page: 'help' })],
       ['Cài đặt', () => this.scene.start('SettingsScene', { back: 'MenuScene' })],
       ['Credits', () => this.scene.start('InfoScene', { page: 'credits' })],
     ];
-    const buttons = items.map(([label, fn, disabled, sub], i) => new MenuButton(this, bx, 200 + i * 78, label, fn, { disabled, sub, width: 360, height: 64 }));
+    const buttons = items.map(([label, fn, disabled, sub], i) => new MenuButton(this, bx, 168 + i * 70, label, fn, { disabled, sub, width: 380, height: 60 }));
     new MenuNav(this, buttons);
     if (hasProgress) buttons[1].emit('hover');
 

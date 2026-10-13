@@ -13,7 +13,8 @@ export class EffectsSystem implements WorldFx {
   reduceFlash = false;
 
   constructor(private scene: Phaser.Scene) {
-    this.flash = scene.add.rectangle(0, 0, GAME_W, GAME_H, 0xffffff, 0).setOrigin(0).setScrollFactor(0).setDepth(5000);
+    // per-screen effect: not mirrored to the co-op guest (each player only sees their own hero's flashes)
+    this.flash = scene.add.rectangle(0, 0, GAME_W, GAME_H, 0xffffff, 0).setOrigin(0).setScrollFactor(0).setDepth(5000).setData('noMirror', true);
   }
 
   private take<T extends Phaser.GameObjects.GameObject & { active: boolean }>(pool: T[], make: () => T, max: number): T | null {

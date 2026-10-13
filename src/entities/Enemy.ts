@@ -47,7 +47,7 @@ export class Enemy extends Actor {
     this.height = 140 * cfg.scale;
     this.halfWidth = 20 * cfg.scale;
     this.mass = cfg.archetype === 'brute' ? 1.6 : 1;
-    this.facing = x < w.player.x ? 1 : -1;
+    this.facing = x < w.targetFor({ x, y }).x ? 1 : -1;
     if (cfg.id === 'clone') view.setAlpha(0.85);
     this.ai = new EnemyAI(this);
     if (cfg.archetype === 'flyer') {

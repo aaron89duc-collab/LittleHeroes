@@ -36,6 +36,8 @@ interface ActiveAttack extends AttackSpec {
 export class CombatSystem {
   private attacks: ActiveAttack[] = [];
   private tokens = new Set<number>();
+  /** simultaneous attackers allowed (raised in co-op: two heroes to share them) */
+  maxTokens = MAX_SIMULTANEOUS_ATTACKERS;
 
   constructor(
     private now: () => number,
@@ -121,7 +123,7 @@ export class CombatSystem {
   /** Limits how many enemies may attack the player at once (anti stun-lock, GDD §8.2). */
   requestToken(enemyId: number): boolean {
     if (this.tokens.has(enemyId)) return true;
-    if (this.tokens.size >= MAX_SIMULTANEOUS_ATTACKERS) return false;
+    if (this.tokens.size >= this.maxTokens) return false;
     this.tokens.add(enemyId);
     return true;
   }

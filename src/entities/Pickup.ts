@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import type { Player } from './Player';
 import type { GameWorldApi } from './WorldApi';
 
 export type PickupKind = 'health' | 'energy' | 'token';
@@ -40,12 +41,12 @@ export class Pickup {
       this.destroy();
       return;
     }
-    const p = this.w.player;
-    if (p.alive && this.age > 300 && Math.abs(p.x - this.x) < 46 && Math.abs(p.y - this.y) < 30 && p.z < 60) this.collect();
+    if (this.age <= 300) return;
+    const p = this.w.players.find((q) => q.alive && Math.abs(q.x - this.x) < 46 && Math.abs(q.y - this.y) < 30 && q.z < 60);
+    if (p) this.collect(p);
   }
 
-  private collect(): void {
-    const p = this.w.player;
+  private collect(p: Player): void {
     if (this.kind === 'health') {
       p.heal(PICKUP_VALUES.health);
       this.w.fx.text(this.x, this.y - 70, `+${PICKUP_VALUES.health} HP`, '#ff8fa3', 26);

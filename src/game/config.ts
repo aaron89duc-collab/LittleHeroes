@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { BootScene } from '../scenes/BootScene';
 import { CharacterSelectScene } from '../scenes/CharacterSelectScene';
+import { CoopGuestScene } from '../scenes/CoopGuestScene';
+import { CoopLobbyScene } from '../scenes/CoopLobbyScene';
 import { EndingScene } from '../scenes/EndingScene';
 import { GameScene } from '../scenes/GameScene';
 import { HUDScene } from '../scenes/HUDScene';
@@ -42,5 +44,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
     ResultScene,
     EndingScene,
     InfoScene,
+    CoopLobbyScene,
+    CoopGuestScene,
   ],
 };

@@ -29,6 +29,8 @@ export interface ProjectileOpts {
 export interface GameWorldApi extends WorldLike {
   readonly combat: CombatSystem;
   readonly player: Player;
+  readonly players: Player[];
+  targetFor(a: { x: number; y: number }): Player;
   readonly telegraph: TelegraphSystem;
   readonly camLeft: number;
   readonly camRight: number;
@@ -37,7 +39,9 @@ export interface GameWorldApi extends WorldLike {
   spawnProjectile(o: ProjectileOpts): void;
   spawnEnemy(type: string, x?: number, y?: number): Actor | null;
   onEnemyDefeated(e: Actor, cfg?: EnemyConfig): void;
-  onPlayerDefeated(): void;
+  onPlayerDefeated(p?: Player): void;
   addScore(n: number): void;
-  playerFreezeMultiplier(): number;
+  playerFreezeMultiplier(p?: Player): number;
+  /** red/white screen flash for one hero's screen (slot 0 = host, 1 = co-op guest) */
+  flashFor(slot: number, color: number, ms: number): void;
 }

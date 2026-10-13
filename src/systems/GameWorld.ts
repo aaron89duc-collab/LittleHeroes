@@ -21,7 +21,7 @@ export interface WorldEvents {
   enemyDefeated(e: Actor, cfg?: EnemyConfig): void;
   bossDefeated(b: Boss): void;
   bossPhase(b: Boss, phase: BossPhase, index: number): void;
-  playerDefeated(): void;
+  playerDefeated(p: Player): void;
 }
 
 export interface RunStats {
@@ -42,7 +42,8 @@ export class GameWorld implements BossWorldApi {
   readonly audio = AudioSystem.get();
   readonly combat: CombatSystem;
   readonly telegraph: TelegraphSystem;
-  player!: Player;
+  /** players[0] = local / host hero, players[1] = online co-op partner (host simulates both). */
+  players: Player[] = [];
   enemies: Enemy[] = [];
   bosses: Boss[] = [];
   pillars: Pillar[] = [];
@@ -61,6 +62,11 @@ export class GameWorld implements BossWorldApi {
   private events: WorldEvents | null = null;
   private blizzard = false;
   timeScale = 1;
+  /** Logical play-field width: GAME_W, or the narrower of both screens in online co-op. */
+  viewW = GAME_W;
+  /** Left edge of the play field in world space (the camera is centred on it). */
+  viewLeft = 0;
+  private targetMemo = new WeakMap<object, { p: Player; at: number }>();
 
   constructor(
     readonly scene: Phaser.Scene,
@@ -72,8 +78,50 @@ export class GameWorld implements BossWorldApi {
     this.telegraph = new TelegraphSystem(scene, () => this.now);
     this.combat = new CombatSystem(
       () => this.now,
-      (team) => (team === 'hero' ? this.hostileTargets() : [this.player]),
+      (team) => (team === 'hero' ? this.hostileTargets() : this.players),
     );
+  }
+
+  /** Host hero (also the only hero in single player). */
+  get player(): Player {
+    return this.players[0];
+  }
+
+  get coop(): boolean {
+    return this.players.length > 1;
+  }
+
+  alivePlayers(): Player[] {
+    return this.players.filter((p) => p.alive);
+  }
+
+  /** x of the hero furthest to the right (stage progress). */
+  get leadX(): number {
+    let x = -Infinity;
+    for (const p of this.players) x = Math.max(x, p.x);
+    return x;
+  }
+
+  /**
+   * Which hero an enemy should chase: the nearest living one, kept for a while so enemies do not flip
+   * back and forth between two heroes standing close together.
+   */
+  targetFor(a: { x: number; y: number }): Player {
+    if (this.players.length === 1) return this.players[0];
+    const alive = this.alivePlayers();
+    if (!alive.length) return this.players[0];
+    const d = (p: Player) => Math.abs(p.x - a.x) + Math.abs(p.y - a.y) * 1.5;
+    let best = alive[0];
+    for (const p of alive) if (d(p) < d(best)) best = p;
+    const memo = this.targetMemo.get(a);
+    if (memo && memo.p.alive && memo.p !== best && this.now - memo.at < 2500 && d(memo.p) - d(best) < 220) return memo.p;
+    if (!memo || memo.p !== best) this.targetMemo.set(a, { p: best, at: this.now });
+    return best;
+  }
+
+  /** Puts the camera so that the logical play field [viewLeft, viewLeft + viewW] sits in the middle of the screen. */
+  syncCamera(): void {
+    this.cam.scrollX = this.viewLeft - (GAME_W - this.viewW) / 2;
   }
 
   setEvents(e: WorldEvents): void {
@@ -81,8 +129,19 @@ export class GameWorld implements BossWorldApi {
   }
 
   createPlayer(id: CharacterId, x: number, y: number): Player {
-    this.player = new Player(this, id, x, y);
-    return this.player;
+    const p = new Player(this, id, x, y);
+    p.slot = this.players.length;
+    this.players.push(p);
+    return p;
+  }
+
+  /** Online partner left: remove their hero, the stage continues solo. */
+  removePlayer(p: Player): void {
+    const i = this.players.indexOf(p);
+    if (i <= 0) return;
+    this.combat.cancelAttacksOf(p);
+    p.destroy();
+    this.players.splice(i, 1);
   }
 
   get cam(): Phaser.Cameras.Scene2D.Camera {
@@ -90,11 +149,11 @@ export class GameWorld implements BossWorldApi {
   }
 
   get camLeft(): number {
-    return this.cam.scrollX;
+    return this.viewLeft;
   }
 
   get camRight(): number {
-    return this.cam.scrollX + GAME_W;
+    return this.viewLeft + this.viewW;
   }
 
   bounds(actor?: { team: 'hero' | 'enemy' | 'object' }): WorldBounds {
@@ -106,7 +165,19 @@ export class GameWorld implements BossWorldApi {
     return { minX: left, maxX: right, minY: FLOOR_TOP, maxY: FLOOR_BOTTOM };
   }
 
-  shake(intensity: number, ms: number): void {
+  /** co-op host: camera shakes are forwarded to the guest */
+  onShake: ((intensity: number, ms: number) => void) | null = null;
+  /** co-op host: screen flashes meant for the guest's hero */
+  onFlash: ((color: number, ms: number) => void) | null = null;
+
+  flashFor(slot: number, color: number, ms: number): void {
+    if (slot === 0) this.fx.flashScreen(color, ms);
+    else this.onFlash?.(color, ms);
+  }
+
+  shake(intensity: number, ms: number, only?: number): void {
+    if (only !== 0) this.onShake?.(intensity, ms);
+    if (only === 1) return;
     if (!this.settings.cameraShake) return;
     this.cam.shake(ms, intensity * 0.8);
   }
@@ -132,8 +203,7 @@ export class GameWorld implements BossWorldApi {
     this.score += Math.round(n);
   }
 
-  playerFreezeMultiplier(): number {
-    const p = this.player;
+  playerFreezeMultiplier(p: Player = this.player): number {
     return (this.isNearHeater(p.x, p.y) ? 0.4 : 1) * this.freezeReduction;
   }
 
@@ -158,13 +228,16 @@ export class GameWorld implements BossWorldApi {
     const cfg = getEnemy(type);
     let sx = x;
     if (sx === undefined) {
-      const fromLeft = Math.random() < 0.4 && this.player.x - this.camLeft > 260;
+      const fromLeft = Math.random() < 0.4 && Math.min(...this.players.map((q) => q.x)) - this.camLeft > 260;
       sx = fromLeft ? this.camLeft - 70 : this.camRight + 70;
     }
     let sy = y ?? Phaser.Math.Between(FLOOR_TOP + 20, FLOOR_BOTTOM - 10);
-    // never on top of the player (GDD §8.2)
-    if (Math.abs(sx - this.player.x) < 120 && Math.abs(sy - this.player.y) < 60) sy = sy > this.player.y ? Math.min(FLOOR_BOTTOM, sy + 80) : Math.max(FLOOR_TOP, sy - 80);
-    const e = new Enemy(this, cfg, sx, sy, this.stage.enemyHpMul, this.stage.enemyDmgMul);
+    // never on top of a hero (GDD §8.2)
+    for (const p of this.players) {
+      if (Math.abs(sx - p.x) < 120 && Math.abs(sy - p.y) < 60) sy = sy > p.y ? Math.min(FLOOR_BOTTOM, sy + 80) : Math.max(FLOOR_TOP, sy - 80);
+    }
+    // co-op: tougher crowds so two heroes still have to work for it
+    const e = new Enemy(this, cfg, sx, sy, this.stage.enemyHpMul * (this.coop ? 1.4 : 1), this.stage.enemyDmgMul);
     if (x !== undefined) e.aiState = 'approach';
     this.enemies.push(e);
     this.onSpawnHook?.(e);
@@ -174,7 +247,7 @@ export class GameWorld implements BossWorldApi {
   onSpawnHook: ((e: Enemy) => void) | null = null;
 
   spawnBoss(id: Boss['cfg'], x: number, y: number): Boss {
-    const b = new Boss(this, id, x, y, 1, this.stage.enemyDmgMul > 1 ? 1 + (this.stage.enemyDmgMul - 1) * 0.5 : 1);
+    const b = new Boss(this, id, x, y, this.coop ? 1.6 : 1, this.stage.enemyDmgMul > 1 ? 1 + (this.stage.enemyDmgMul - 1) * 0.5 : 1);
     this.bosses.push(b);
     return b;
   }
@@ -212,8 +285,8 @@ export class GameWorld implements BossWorldApi {
     this.events?.bossPhase(b, phase, index);
   }
 
-  onPlayerDefeated(): void {
-    this.events?.playerDefeated();
+  onPlayerDefeated(p: Player = this.player): void {
+    this.events?.playerDefeated(p);
   }
 
   /** Push overlapping enemies apart so crowds stay readable. */
@@ -240,7 +313,7 @@ export class GameWorld implements BossWorldApi {
     }
   }
 
-  update(rawDt: number, input: InputState): void {
+  update(rawDt: number, input: InputState, input2?: InputState): void {
     if (this.hitStopMs > 0) {
       this.hitStopMs -= rawDt;
       // keep rigs breathing visually but freeze logic (hit pause)
@@ -250,19 +323,22 @@ export class GameWorld implements BossWorldApi {
     this.now += dt;
     this.stats.timeMs += dt;
     const p = this.player;
-    const hpBefore = p.hp;
+    const hpBefore = this.players.map((q) => q.hp);
     p.update(dt, input);
+    for (let i = 1; i < this.players.length; i++) this.players[i].update(dt, input2);
     for (const e of this.enemies) e.update(dt);
     for (const b of this.bosses) b.update(dt);
     for (const pl of this.pillars) pl.update();
     this.separate();
     this.combat.update();
-    for (const pr of this.projectiles) pr.update(dt, [p]);
+    for (const pr of this.projectiles) pr.update(dt, this.players);
     for (const pk of this.pickups) pk.update(dt);
     for (const n of this.npcs) n.update(dt);
     this.telegraph.update();
-    if (p.hp < hpBefore) this.stats.damageTaken += hpBefore - p.hp;
-    this.stats.maxCombo = Math.max(this.stats.maxCombo, p.combo.hitCount);
+    this.players.forEach((q, i) => {
+      if (q.hp < hpBefore[i]) this.stats.damageTaken += hpBefore[i] - q.hp;
+      this.stats.maxCombo = Math.max(this.stats.maxCombo, q.combo.hitCount);
+    });
     // cleanup
     if (this.enemies.some((e) => e.deathDone || e.removed)) {
       for (const e of this.enemies) if (e.deathDone && !e.removed) e.destroy();
@@ -278,7 +354,8 @@ export class GameWorld implements BossWorldApi {
   destroy(): void {
     this.combat.clear();
     this.telegraph.clear();
-    this.player?.destroy();
+    for (const p of this.players) p.destroy();
+    this.players = [];
     for (const e of this.enemies) e.destroy();
     for (const b of this.bosses) b.destroy();
     for (const p of this.pillars) p.destroy();
