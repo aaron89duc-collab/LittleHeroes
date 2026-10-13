@@ -90,7 +90,7 @@ export class StageManager {
   }
 
   get playerStartX(): number {
-    return this.checkpointReached ? this.restX + 160 : 200;
+    return this.checkpointReached ? this.restX + 160 : 340;
   }
 
   init(): void {
@@ -237,7 +237,7 @@ export class StageManager {
     }
     w.audio.play('roar');
     this.hud.banner(`BOSS: ${this.bosses.map((b) => b.cfg.name).join(' & ')}`, this.stage.objectives[0], '#ff5a5a');
-    w.audio.playMusic(this.stage.music);
+    w.audio.playMusic(this.stage.id >= 6 ? 13 : 12); // boss battle theme
     // stage mechanics
     const pl = this.stage.pillars;
     if (pl && this.stage.theme === 'factory') {

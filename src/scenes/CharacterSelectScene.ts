@@ -1,9 +1,8 @@
 import Phaser from 'phaser';
-import { HEADS } from '../art/registry';
 import { CHARACTER_ORDER, CHARACTERS } from '../config/characters';
 import { getMove } from '../config/moves';
-import { FONT } from '../game/constants';
-import { Rig } from '../rig/Rig';
+import { FONT, UI_OFFSET } from '../game/constants';
+import { createHeroView, type HeroViewT } from '../rig/HeroSpriteView';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import type { CharacterId } from '../types/game';
@@ -21,7 +20,7 @@ export class CharacterSelectScene extends Phaser.Scene {
   private cards: Phaser.GameObjects.Container[] = [];
   private frames: Phaser.GameObjects.Graphics[] = [];
   private badges: Phaser.GameObjects.Text[] = [];
-  private rig: Rig | null = null;
+  private rig: HeroViewT | null = null;
   private info!: Phaser.GameObjects.Container;
   private demoT = 0;
   private demoI = 0;
@@ -37,6 +36,7 @@ export class CharacterSelectScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     this.cards = [];
     this.frames = [];
     this.badges = [];
@@ -153,18 +153,9 @@ export class CharacterSelectScene extends Phaser.Scene {
       wordWrap: { width: 500 },
     });
     this.info.add(combo);
-    const h = HEADS[`head-${id}`];
-    this.rig = new Rig(this, {
-      partKey: `rig-${id}`,
-      headKey: h.key,
-      headHeight: h.height,
-      headAnchorY: h.anchorY,
-      headOffsetX: h.offsetX,
-      scale: 1.35,
-      tailKey: id === 'shu-shu' ? 'tail-shu-shu' : undefined,
-      bulk: id === 'bap' ? 1.12 : 1,
-    });
-    this.rig.setPosition(x0 + 460, 360).setDepth(10);
+    this.rig = createHeroView(this, id, 1.35);
+    this.rig.setPosition(x0 + 460, 360);
+    this.rig.setDepth(10);
     this.demoT = 0;
     this.demoI = 0;
   }

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FONT, GAME_H, GAME_W } from '../game/constants';
+import { FONT, GAME_H, GAME_W, UI_OFFSET } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { Backdrop } from '../ui/Backdrop';
@@ -24,8 +24,9 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     if (this.d.back === 'MenuScene') new Backdrop(this, 'mall', 0.6);
-    else this.add.rectangle(0, 0, GAME_W, GAME_H, 0x000000, 0.75).setOrigin(0);
+    else this.add.rectangle(0, 0, GAME_W, GAME_H, 0x000000, 0.75).setOrigin(0).setScrollFactor(0);
     panel(this, 240, 40, 800, 620);
     title(this, 640, 84, 'CÀI ĐẶT', 40);
     const save = SaveSystem.get();

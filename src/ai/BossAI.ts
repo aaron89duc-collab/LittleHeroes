@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { GAME_W } from '../game/constants';
 import type { Boss } from '../entities/Boss';
 import { BLOCK, CROUCH, TELEGRAPH, VICTORY } from '../rig/Poses';
 import type { BossMove, MoveHit } from '../types/game';
@@ -578,7 +579,7 @@ export class BossAI {
           at: 0,
           fn: () => {
             v.hold('roar', VICTORY, 150);
-            this.w.fx.text(this.w.camLeft + 640, 300, 'BÃO TUYẾT! Đứng gần lò sưởi!', '#bff4ff', 34);
+            this.w.fx.text(this.w.camLeft + GAME_W / 2, 300, 'BÃO TUYẾT! Đứng gần lò sưởi!', '#bff4ff', 34);
             this.w.audio.play('warning');
           },
         });

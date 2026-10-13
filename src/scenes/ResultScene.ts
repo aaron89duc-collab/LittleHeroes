@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
-import { HEADS } from '../art/registry';
 import { getStage, STAGE_COUNT } from '../config/stages';
-import { FONT } from '../game/constants';
-import { Rig } from '../rig/Rig';
+import { FONT, UI_OFFSET } from '../game/constants';
+import { createHeroView, type HeroViewT } from '../rig/HeroSpriteView';
 import { DOWN, VICTORY, VICTORY2 } from '../rig/Poses';
 import { AudioSystem } from '../systems/AudioSystem';
 import type { RunStats } from '../systems/GameWorld';
@@ -32,20 +31,20 @@ export function rankFor(total: number, stageId: number, damageTaken: number): st
 }
 
 export class ResultScene extends Phaser.Scene {
-  private rig: Rig | null = null;
+  private rig: HeroViewT | null = null;
 
   constructor() {
     super('ResultScene');
   }
 
   create(d: ResultData): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     const s = getStage(d.stageId);
     new Backdrop(this, s.theme, 0.55);
     panel(this, 90, 50, 1100, 620);
     const save = SaveSystem.get();
     const id = save.data.selectedCharacter;
-    const h = HEADS[`head-${id}`];
-    this.rig = new Rig(this, { partKey: `rig-${id}`, headKey: h.key, headHeight: h.height, headAnchorY: h.anchorY, headOffsetX: h.offsetX, scale: 1.9, tailKey: id === 'shu-shu' ? 'tail-shu-shu' : undefined, bulk: id === 'bap' ? 1.12 : 1 });
+    this.rig = createHeroView(this, id, 1.9);
     this.rig.setPosition(300, 560);
     if (d.victory) {
       this.rig.hold('v', VICTORY, 200);

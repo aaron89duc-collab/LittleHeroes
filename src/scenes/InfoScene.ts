@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FONT } from '../game/constants';
+import { FONT, UI_OFFSET } from '../game/constants';
 import { Backdrop } from '../ui/Backdrop';
 import { MenuButton, MenuNav, panel, title } from '../ui/MenuComponents';
 
@@ -36,6 +36,7 @@ export class InfoScene extends Phaser.Scene {
   }
 
   create(d: { page: 'help' | 'credits' }): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     new Backdrop(this, d.page === 'help' ? 'subway' : 'chaos', 0.55);
     panel(this, 80, 40, 1120, 560);
     if (d.page === 'help') {

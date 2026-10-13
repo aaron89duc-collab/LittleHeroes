@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_H, GAME_W } from '../game/constants';
+import { GAME_H, GAME_W, UI_OFFSET } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
 import { TouchController } from '../input/TouchController';
 import { MenuButton, MenuNav, panel, title } from '../ui/MenuComponents';
@@ -24,7 +24,8 @@ export class PauseScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x000000, 0.6).setOrigin(0);
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
+    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x000000, 0.6).setOrigin(0).setScrollFactor(0);
     panel(this, 400, 110, 480, 500);
     title(this, 640, 160, 'TẠM DỪNG', 44);
     const resume = new MenuButton(this, 640, 250, 'Tiếp tục', () => this.resumeGame(), { width: 380 });

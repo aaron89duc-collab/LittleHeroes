@@ -11,9 +11,14 @@ async def main():
         pg.on('pageerror', lambda e: errs.append(f'PAGEERROR {e}'))
         pg.on('console', lambda m: errs.append(f'{m.type}: {m.text[:300]}') if m.type in ('error','warning') and 'ERR_FAILED' not in m.text and 'swiftshader' not in m.text.lower() else None)
         await pg.route('**/fonts.googleapis.com/**', lambda r: r.abort())
+        if os.environ.get('HERO'):  # play as a given hero (dau-dau / shu-shu / bap)
+            await pg.add_init_script("localStorage.setItem('little-heroes-save-v1', JSON.stringify({version: 1, selectedCharacter: '%s'}))" % os.environ['HERO'])
         await pg.goto(os.environ.get('BASE','http://127.0.0.1:4173/') + '?renderer=canvas' + os.environ.get('EXTRA',''), timeout=20000)
-        await pg.wait_for_timeout(2000)
         cdp = await pg.context.new_cdp_session(pg)
+        for _ in range(60):  # wait until preload finished (menu visible)
+            await pg.wait_for_timeout(500)
+            r = await cdp.send('Runtime.evaluate', {'expression': "!!(window.__game && __game.scene.isActive('MenuScene'))"})
+            if r['result'].get('value'): break
         await cdp.send('Runtime.evaluate', {'expression': open('tools/bot.js').read()})
         cp = 'true' if os.environ.get('CP') else 'false'
         await cdp.send('Runtime.evaluate', {'expression': f"__game.scene.getScenes(true).forEach(s=>s.scene.stop()); __game.scene.start('GameScene',{{stageId:{stage}, checkpoint:{cp}}}); __bot.start({{god:{str(god).lower()}, energy:{'true' if os.environ.get('EN') else 'false'}}})"})

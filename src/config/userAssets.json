@@ -255,6 +255,383 @@
    },
    "footY": 0.927,
    "bodyH": 223
+  },
+  "satyr1": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/satyr1/idle.png",
+     "frames": 7
+    },
+    "walk": {
+     "file": "assets/sprites/satyr1/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/satyr1/attack.png",
+     "frames": 4
+    },
+    "attack2": {
+     "file": "assets/sprites/satyr1/attack2.png",
+     "frames": 10
+    },
+    "hurt": {
+     "file": "assets/sprites/satyr1/hurt.png",
+     "frames": 4
+    },
+    "death": {
+     "file": "assets/sprites/satyr1/death.png",
+     "frames": 4
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 76
+  },
+  "satyr2": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/satyr2/idle.png",
+     "frames": 7
+    },
+    "walk": {
+     "file": "assets/sprites/satyr2/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/satyr2/attack.png",
+     "frames": 8
+    },
+    "attack2": {
+     "file": "assets/sprites/satyr2/attack2.png",
+     "frames": 8
+    },
+    "hurt": {
+     "file": "assets/sprites/satyr2/hurt.png",
+     "frames": 4
+    },
+    "death": {
+     "file": "assets/sprites/satyr2/death.png",
+     "frames": 4
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 90
+  },
+  "satyr3": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/satyr3/idle.png",
+     "frames": 6
+    },
+    "walk": {
+     "file": "assets/sprites/satyr3/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/satyr3/attack.png",
+     "frames": 9
+    },
+    "hurt": {
+     "file": "assets/sprites/satyr3/hurt.png",
+     "frames": 4
+    },
+    "death": {
+     "file": "assets/sprites/satyr3/death.png",
+     "frames": 4
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 77
+  },
+  "gorgon1": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/gorgon1/idle.png",
+     "frames": 7
+    },
+    "walk": {
+     "file": "assets/sprites/gorgon1/walk.png",
+     "frames": 13
+    },
+    "walkattack": {
+     "file": "assets/sprites/gorgon1/walkattack.png",
+     "frames": 7
+    },
+    "attack": {
+     "file": "assets/sprites/gorgon1/attack.png",
+     "frames": 16
+    },
+    "attack2": {
+     "file": "assets/sprites/gorgon1/attack2.png",
+     "frames": 7
+    },
+    "attack3": {
+     "file": "assets/sprites/gorgon1/attack3.png",
+     "frames": 5
+    },
+    "prepare": {
+     "file": "assets/sprites/gorgon1/prepare.png",
+     "frames": 5
+    },
+    "hurt": {
+     "file": "assets/sprites/gorgon1/hurt.png",
+     "frames": 3
+    },
+    "death": {
+     "file": "assets/sprites/gorgon1/death.png",
+     "frames": 3
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 88
+  },
+  "gorgon2": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/gorgon2/idle.png",
+     "frames": 7
+    },
+    "walk": {
+     "file": "assets/sprites/gorgon2/walk.png",
+     "frames": 13
+    },
+    "walkattack": {
+     "file": "assets/sprites/gorgon2/walkattack.png",
+     "frames": 7
+    },
+    "attack": {
+     "file": "assets/sprites/gorgon2/attack.png",
+     "frames": 16
+    },
+    "attack2": {
+     "file": "assets/sprites/gorgon2/attack2.png",
+     "frames": 7
+    },
+    "attack3": {
+     "file": "assets/sprites/gorgon2/attack3.png",
+     "frames": 5
+    },
+    "prepare": {
+     "file": "assets/sprites/gorgon2/prepare.png",
+     "frames": 5
+    },
+    "hurt": {
+     "file": "assets/sprites/gorgon2/hurt.png",
+     "frames": 3
+    },
+    "death": {
+     "file": "assets/sprites/gorgon2/death.png",
+     "frames": 3
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 88
+  },
+  "gorgon3": {
+   "frameW": 128,
+   "frameH": 128,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/gorgon3/idle.png",
+     "frames": 7
+    },
+    "walk": {
+     "file": "assets/sprites/gorgon3/walk.png",
+     "frames": 13
+    },
+    "walkattack": {
+     "file": "assets/sprites/gorgon3/walkattack.png",
+     "frames": 7
+    },
+    "attack": {
+     "file": "assets/sprites/gorgon3/attack.png",
+     "frames": 16
+    },
+    "attack2": {
+     "file": "assets/sprites/gorgon3/attack2.png",
+     "frames": 10
+    },
+    "attack3": {
+     "file": "assets/sprites/gorgon3/attack3.png",
+     "frames": 5
+    },
+    "prepare": {
+     "file": "assets/sprites/gorgon3/prepare.png",
+     "frames": 5
+    },
+    "hurt": {
+     "file": "assets/sprites/gorgon3/hurt.png",
+     "frames": 3
+    },
+    "death": {
+     "file": "assets/sprites/gorgon3/death.png",
+     "frames": 3
+    }
+   },
+   "footY": 1.0,
+   "bodyH": 88
+  },
+  "reaper1": {
+   "frameW": 199,
+   "frameH": 184,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/reaper1/idle.png",
+     "frames": 9
+    },
+    "walk": {
+     "file": "assets/sprites/reaper1/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/reaper1/attack.png",
+     "frames": 12
+    },
+    "attack2": {
+     "file": "assets/sprites/reaper1/attack2.png",
+     "frames": 12
+    },
+    "attack3": {
+     "file": "assets/sprites/reaper1/attack3.png",
+     "frames": 12
+    },
+    "walkattack": {
+     "file": "assets/sprites/reaper1/walkattack.png",
+     "frames": 12
+    },
+    "hurt": {
+     "file": "assets/sprites/reaper1/hurt.png",
+     "frames": 6
+    },
+    "death": {
+     "file": "assets/sprites/reaper1/death.png",
+     "frames": 15
+    },
+    "jump": {
+     "file": "assets/sprites/reaper1/jump.png",
+     "frames": 6
+    },
+    "fall": {
+     "file": "assets/sprites/reaper1/fall.png",
+     "frames": 6
+    }
+   },
+   "footY": 0.867,
+   "bodyH": 137
+  },
+  "reaper2": {
+   "frameW": 199,
+   "frameH": 182,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/reaper2/idle.png",
+     "frames": 9
+    },
+    "walk": {
+     "file": "assets/sprites/reaper2/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/reaper2/attack.png",
+     "frames": 12
+    },
+    "attack2": {
+     "file": "assets/sprites/reaper2/attack2.png",
+     "frames": 12
+    },
+    "attack3": {
+     "file": "assets/sprites/reaper2/attack3.png",
+     "frames": 12
+    },
+    "walkattack": {
+     "file": "assets/sprites/reaper2/walkattack.png",
+     "frames": 12
+    },
+    "hurt": {
+     "file": "assets/sprites/reaper2/hurt.png",
+     "frames": 6
+    },
+    "death": {
+     "file": "assets/sprites/reaper2/death.png",
+     "frames": 15
+    },
+    "jump": {
+     "file": "assets/sprites/reaper2/jump.png",
+     "frames": 6
+    },
+    "fall": {
+     "file": "assets/sprites/reaper2/fall.png",
+     "frames": 6
+    }
+   },
+   "footY": 0.874,
+   "bodyH": 137
+  },
+  "reaper3": {
+   "frameW": 197,
+   "frameH": 181,
+   "facing": "right",
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/reaper3/idle.png",
+     "frames": 9
+    },
+    "walk": {
+     "file": "assets/sprites/reaper3/walk.png",
+     "frames": 12
+    },
+    "attack": {
+     "file": "assets/sprites/reaper3/attack.png",
+     "frames": 12
+    },
+    "attack2": {
+     "file": "assets/sprites/reaper3/attack2.png",
+     "frames": 12
+    },
+    "attack3": {
+     "file": "assets/sprites/reaper3/attack3.png",
+     "frames": 12
+    },
+    "walkattack": {
+     "file": "assets/sprites/reaper3/walkattack.png",
+     "frames": 12
+    },
+    "hurt": {
+     "file": "assets/sprites/reaper3/hurt.png",
+     "frames": 6
+    },
+    "death": {
+     "file": "assets/sprites/reaper3/death.png",
+     "frames": 15
+    },
+    "jump": {
+     "file": "assets/sprites/reaper3/jump.png",
+     "frames": 6
+    },
+    "fall": {
+     "file": "assets/sprites/reaper3/fall.png",
+     "frames": 6
+    }
+   },
+   "footY": 0.874,
+   "bodyH": 136
   }
  },
  "icons": {

@@ -16,7 +16,7 @@ interface SpriteDef {
 export const SPRITES = userAssets.sprites as Record<string, SpriteDef>;
 
 const LOOPING = new Set(['idle', 'walk']);
-const PIXEL_ART = new Set(['cyber1', 'cyber2', 'cyber3']);
+const PIXEL_ART = new Set(['cyber1', 'cyber2', 'cyber3', 'satyr1', 'satyr2', 'satyr3', 'gorgon1', 'gorgon2', 'gorgon3']);
 
 /** Load every sprite sheet from the user's asset packs (call from a scene's preload). */
 export function loadSpriteSheets(scene: Phaser.Scene): void {

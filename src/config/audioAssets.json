@@ -1,0 +1,35 @@
+{
+ "music": {
+  "0": "assets/audio/music/m00.mp3",
+  "1": "assets/audio/music/m01.mp3",
+  "2": "assets/audio/music/m02.mp3",
+  "3": "assets/audio/music/m03.mp3",
+  "4": "assets/audio/music/m04.mp3",
+  "5": "assets/audio/music/m05.mp3",
+  "6": "assets/audio/music/m06.mp3",
+  "7": "assets/audio/music/m07.mp3",
+  "8": "assets/audio/music/m08.mp3",
+  "9": "assets/audio/music/m09.mp3",
+  "10": "assets/audio/music/m10.mp3",
+  "11": "assets/audio/music/m11.mp3",
+  "12": "assets/audio/music/m12.mp3",
+  "13": "assets/audio/music/m13.mp3"
+ },
+ "sfx": {
+  "punch": "assets/audio/sfx/punch.wav",
+  "heavy": "assets/audio/sfx/heavy.wav",
+  "explosion": "assets/audio/sfx/explosion.wav",
+  "explosion2": "assets/audio/sfx/explosion2.wav",
+  "warning": "assets/audio/sfx/warning.wav",
+  "pickup": "assets/audio/sfx/pickup.wav",
+  "coin": "assets/audio/sfx/coin.wav",
+  "ui": "assets/audio/sfx/ui.wav",
+  "confirm": "assets/audio/sfx/confirm.wav",
+  "break": "assets/audio/sfx/break.wav",
+  "train": "assets/audio/sfx/train.wav",
+  "spit": "assets/audio/sfx/spit.wav",
+  "defeat": "assets/audio/sfx/defeat.wav",
+  "victory": "assets/audio/sfx/victory.wav",
+  "ultimate": "assets/audio/sfx/ultimate.wav"
+ }
+}

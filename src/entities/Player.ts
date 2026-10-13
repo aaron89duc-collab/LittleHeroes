@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
-import { HEADS } from '../art/registry';
 import { ComboSystem } from '../combat/ComboSystem';
 import { CooldownTracker, EN_GAIN_FINISHER, EN_GAIN_LIGHT, EnergyMeter } from '../combat/SkillSystem';
 import { BASE_WALK_SPEED, CHARACTERS } from '../config/characters';
 import { getMove, moveDuration } from '../config/moves';
 import { HERO_SCALE } from '../game/constants';
 import { DODGE, FROZEN, JUMP_FALL, JUMP_UP, VICTORY } from '../rig/Poses';
-import { Rig } from '../rig/Rig';
+import type { ActorView } from '../rig/ActorView';
+import { createHeroView } from '../rig/HeroSpriteView';
 import type { CharacterId, CharacterStats, InputState, MoveConfig } from '../types/game';
 import type { HitEvent, HitResult } from '../types/world';
 import { Actor } from './Actor';
@@ -38,17 +38,7 @@ export class Player extends Actor {
 
   constructor(protected w: GameWorldApi, id: CharacterId, x: number, y: number) {
     const stats = CHARACTERS[id];
-    const head = HEADS[`head-${id}`];
-    const rig = new Rig(w.scene, {
-      partKey: `rig-${id}`,
-      headKey: head.key,
-      headHeight: head.height,
-      headAnchorY: head.anchorY,
-      headOffsetX: head.offsetX,
-      scale: HERO_SCALE * (id === 'bap' ? 1.06 : 1),
-      tailKey: id === 'shu-shu' ? 'tail-shu-shu' : undefined,
-      bulk: id === 'bap' ? 1.12 : 1,
-    });
+    const rig = createHeroView(w.scene, id, HERO_SCALE);
     super(w, rig, x, y);
     this.stats = stats;
     this.maxHp = stats.maxHp;
@@ -60,8 +50,8 @@ export class Player extends Actor {
     this.halfWidth = 20;
   }
 
-  get rig(): Rig {
-    return this.view as Rig;
+  get rig(): ActorView & Phaser.GameObjects.Container {
+    return this.view as ActorView & Phaser.GameObjects.Container;
   }
 
   get skillIds(): [string, string, string] {

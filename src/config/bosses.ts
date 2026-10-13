@@ -81,7 +81,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   seaBeast: {
-    id: 'seaBeast', name: 'Thủy Quái', maxHp: 700, moveSpeed: 80, damageReceivedMultiplier: 1, scale: 1.8,
+    id: 'seaBeast', name: 'Xà Nữ Thủy Quái', maxHp: 700, moveSpeed: 80, damageReceivedMultiplier: 1, scale: 1.8, sprite: { key: 'gorgon1', scale: 2.9 },
     body: 'crab', head: 'none', palette: { body: 0xd9532b, dark: 0x7a2412, skin: 0xffb08a, accent: 0x3fd5ff },
     maxStaggerPerWindow: 3, score: 5000,
     phases: [
@@ -132,7 +132,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   iceKing: {
-    id: 'iceKing', name: 'Băng Vương', maxHp: 780, moveSpeed: 80, damageReceivedMultiplier: 1, scale: 1.9,
+    id: 'iceKing', name: 'Băng Xà Hậu', maxHp: 780, moveSpeed: 80, damageReceivedMultiplier: 1, scale: 1.9, sprite: { key: 'gorgon3', scale: 3.0, tint: 0xcfefff },
     body: 'humanoid', head: 'head-swat', palette: { body: 0x7fc8f0, dark: 0x2e6b94, skin: 0xd8f3ff, accent: 0xbff4ff },
     maxStaggerPerWindow: 3, score: 6500,
     phases: [
@@ -141,7 +141,7 @@ export const BOSSES: Record<string, BossConfig> = {
         { kind: 'freezeZone', damage: 8, telegraphMs: 800, recoveryMs: 800, weight: 2, range: 120, color: 0x9be7ff },
         { kind: 'combo', damage: 12, telegraphMs: 480, recoveryMs: 750, weight: 3, count: 2 },
       ] },
-      { hpBelow: 0.5, speedMul: 1.15, damageMul: 1.15, message: 'Băng Vương triệu hồi bão tuyết!', moves: [
+      { hpBelow: 0.5, speedMul: 1.15, damageMul: 1.15, message: 'Băng Xà Hậu triệu hồi bão tuyết!', moves: [
         { kind: 'blizzard', damage: 5, telegraphMs: 900, recoveryMs: 900, weight: 2, color: 0xe8fbff },
         { kind: 'iceWall', damage: 15, telegraphMs: 700, recoveryMs: 850, weight: 2, color: 0xbff4ff },
         { kind: 'freezeZone', damage: 9, telegraphMs: 700, recoveryMs: 750, weight: 2, range: 140, color: 0x9be7ff },
@@ -150,7 +150,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   twinA: {
-    id: 'twinA', name: 'Hộ Vệ Thạch', maxHp: 520, moveSpeed: 65, damageReceivedMultiplier: 0.95, scale: 1.9,
+    id: 'twinA', name: 'Hộ Vệ Lưỡi Hái Lửa', maxHp: 520, moveSpeed: 65, damageReceivedMultiplier: 0.95, scale: 1.9, sprite: { key: 'reaper3', scale: 1.6 },
     body: 'humanoid', head: 'head-masked', palette: { body: 0x3a1d5c, dark: 0x1c0e2e, skin: 0x9a7a6a, accent: 0xff7a00 },
     maxStaggerPerWindow: 2, score: 4000,
     phases: [
@@ -167,7 +167,7 @@ export const BOSSES: Record<string, BossConfig> = {
     ],
   },
   twinB: {
-    id: 'twinB', name: 'Hộ Vệ Phong', maxHp: 420, moveSpeed: 140, damageReceivedMultiplier: 1.05, scale: 1.5,
+    id: 'twinB', name: 'Hộ Vệ Lưỡi Hái Gió', maxHp: 420, moveSpeed: 140, damageReceivedMultiplier: 1.05, scale: 1.5, sprite: { key: 'reaper1', scale: 1.35, tint: 0xa8e8ff },
     body: 'humanoid', head: 'head-sniper', palette: { body: 0x1d3a5c, dark: 0x0e1c2e, skin: 0x7a6a5a, accent: 0x00e5ff },
     maxStaggerPerWindow: 3, score: 4000,
     phases: [

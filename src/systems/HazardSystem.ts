@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import type { Actor } from '../entities/Actor';
 import type { GameWorldApi } from '../entities/WorldApi';
-import { FLOOR_BOTTOM, FLOOR_TOP, FONT } from '../game/constants';
+import { FLOOR_BOTTOM, FLOOR_TOP, FONT, GAME_W } from '../game/constants';
 import type { HazardConfig } from '../types/game';
 import type { HitEvent } from '../types/world';
 
@@ -220,7 +220,7 @@ export class HazardSystem {
         const fromRight = Math.random() < 0.5;
         w.telegraph.add({ kind: 'rect', x: w.camLeft, y: y0, w: w.camRight - w.camLeft, h }, c.warningMs, 0xff2020);
         const label = w.scene.add
-          .text(w.camLeft + 640, y0 - 30, fromRight ? '◀ TÀU ĐANG ĐẾN!' : 'TÀU ĐANG ĐẾN! ▶', { fontFamily: FONT, fontSize: '30px', fontStyle: '800', color: '#ffffff', backgroundColor: '#c0182a', padding: { x: 10, y: 4 } })
+          .text(w.camLeft + GAME_W / 2, y0 - 30, fromRight ? '◀ TÀU ĐANG ĐẾN!' : 'TÀU ĐANG ĐẾN! ▶', { fontFamily: FONT, fontSize: '30px', fontStyle: '800', color: '#ffffff', backgroundColor: '#c0182a', padding: { x: 10, y: 4 } })
           .setOrigin(0.5)
           .setDepth(3000);
         w.scene.tweens.add({ targets: label, alpha: 0.3, yoyo: true, repeat: -1, duration: 180 });
@@ -282,7 +282,7 @@ export class HazardSystem {
         this.windDir = Math.random() < 0.5 ? 1 : -1;
         const txt = this.windDir === 1 ? 'GIÓ MẠNH  ▶▶▶' : '◀◀◀  GIÓ MẠNH';
         const t = w.scene.add
-          .text(w.camLeft + 640, 170, txt, { fontFamily: FONT, fontSize: '34px', fontStyle: '800', color: '#e8f4ff', stroke: '#1a2a4a', strokeThickness: 6 })
+          .text(w.camLeft + GAME_W / 2, 170, txt, { fontFamily: FONT, fontSize: '34px', fontStyle: '800', color: '#e8f4ff', stroke: '#1a2a4a', strokeThickness: 6 })
           .setOrigin(0.5)
           .setDepth(3000);
         w.scene.tweens.add({ targets: t, x: t.x + this.windDir * 30, yoyo: true, repeat: -1, duration: 200 });
@@ -298,7 +298,7 @@ export class HazardSystem {
         const dir: 1 | -1 = Math.random() < 0.5 ? 1 : -1;
         const startX = dir === 1 ? w.camLeft + 10 : w.camRight - 10;
         w.telegraph.add({ kind: 'rect', x: dir === 1 ? startX : startX - 60, y: FLOOR_TOP - 10, w: 60, h: FLOOR_BOTTOM - FLOOR_TOP + 20 }, c.warningMs, 0xff2a6a);
-        w.fx.text(w.camLeft + 640, 200, 'LASER QUÉT SÀN — NHẢY QUA!', '#ff7aa8', 28);
+        w.fx.text(w.camLeft + GAME_W / 2, 200, 'LASER QUÉT SÀN — NHẢY QUA!', '#ff7aa8', 28);
         w.audio.play('warning');
         this.later(c.warningMs, () => {
           const g = w.scene.add.graphics().setDepth(FLOOR_BOTTOM + 10);

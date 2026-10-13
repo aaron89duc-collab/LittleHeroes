@@ -119,6 +119,64 @@ for name, key in [('Boar King', 'boar'), ('Devil Leader', 'devil'), ('Shaman Kin
     entry['bodyH'] = fh
     manifest['sprites'][key] = entry
 
+
+# ───────────── satyr + gorgon pixel strips (128x128 frames, facing right) ─────────────
+STRIPS = {}
+SAT = P('craftpix-net-131479-free-satyr-sprite-sheet-pixel-art-pack')
+for i in (1, 2, 3):
+    STRIPS[f'satyr{i}'] = (os.path.join(SAT, f'Satyr_{i}'), {'idle': 'Idle', 'walk': 'Walk', 'attack': 'Attack', 'attack2': 'Charge', 'hurt': 'Hurt', 'death': 'Dead'})
+GOR = P('craftpix-net-280097-free-gorgon-pixel-art-character-sprite-sheets')
+for i in (1, 2, 3):
+    STRIPS[f'gorgon{i}'] = (os.path.join(GOR, f'Gorgon_{i}'), {'idle': 'Idle', 'walk': 'Walk', 'walkattack': 'Run', 'attack': 'Attack_1', 'attack2': 'Attack_2', 'attack3': 'Special', 'prepare': 'Idle_2', 'hurt': 'Hurt', 'death': 'Dead'})
+for key, (folder, anims) in STRIPS.items():
+    d = mk('sprites', key)
+    entry = {'frameW': 128, 'frameH': 128, 'facing': 'right', 'anims': {}}
+    bottom = 0; heights = []
+    for a, name in anims.items():
+        im = Image.open(os.path.join(folder, name + '.png')).convert('RGBA')
+        if im.height != 128:
+            continue  # odd-sized strip (Satyr_3 Charge) – skip
+        im.save(os.path.join(d, f'{a}.png'), optimize=True)
+        al = np.array(im)[:, :, 3]
+        rows = np.where(al.max(1) > 0)[0]
+        if a in ('idle', 'walk') and len(rows):
+            bottom = max(bottom, rows.max()); heights.append(rows.max() - rows.min())
+        entry['anims'][a] = {'file': f'assets/sprites/{key}/{a}.png', 'frames': im.width // 128}
+    entry['footY'] = round((bottom + 1) / 128, 3)
+    entry['bodyH'] = int(max(heights))
+    manifest['sprites'][key] = entry
+
+# ───────────── reaper man chibi (900x900 PNG sequences, facing right) ─────────────
+RP = P('craftpix-904589-free-reaper-man-chibi-2d-game-sprites')
+RP_ANIMS = {'idle': ('Idle Blinking', 2), 'walk': ('Walking', 2), 'attack': ('Slashing', 1), 'attack2': ('Kicking', 1),
+            'attack3': ('Throwing', 1), 'walkattack': ('Run Slashing', 1), 'hurt': ('Hurt', 2), 'death': ('Dying', 1),
+            'jump': ('Jump Start', 1), 'fall': ('Falling Down', 1)}
+for i in (1, 2, 3):
+    root = os.path.join(RP, f'Reaper_Man_{i}', 'PNG', 'PNG Sequences')
+    if not os.path.isdir(root):
+        continue
+    key = f'reaper{i}'
+    seqs = {a: [Image.open(f).convert('RGBA') for f in sorted(glob.glob(os.path.join(root, folder, '*.png')))[::step]] for a, (folder, step) in RP_ANIMS.items()}
+    boxes = [im.getbbox() for fr in seqs.values() for im in fr if im.getbbox()]
+    x0 = min(b[0] for b in boxes); y0 = min(b[1] for b in boxes); x1 = max(b[2] for b in boxes); y1 = max(b[3] for b in boxes)
+    k = 0.24
+    fw, fh = round((x1 - x0) * k), round((y1 - y0) * k)
+    d = mk('sprites', key)
+    entry = {'frameW': fw, 'frameH': fh, 'facing': 'right', 'anims': {}}
+    for a, frames in seqs.items():
+        cols = min(len(frames), max(1, 4000 // fw))
+        rows_n = (len(frames) + cols - 1) // cols
+        sheet = Image.new('RGBA', (fw * cols, fh * rows_n), (0, 0, 0, 0))
+        for j, im in enumerate(frames):
+            sheet.alpha_composite(im.crop((x0, y0, x1, y1)).resize((fw, fh), Image.LANCZOS), ((j % cols) * fw, (j // cols) * fh))
+        sheet.quantize(colors=256, method=Image.Quantize.FASTOCTREE).save(os.path.join(d, f'{a}.png'), optimize=True)
+        entry['anims'][a] = {'file': f'assets/sprites/{key}/{a}.png', 'frames': len(frames)}
+    idle = seqs['idle'][0].crop((x0, y0, x1, y1)); al = np.array(idle)[:, :, 3]
+    r = np.where(al.max(1) > 0)[0]
+    entry['footY'] = round((r.max() + 1) / (y1 - y0), 3)
+    entry['bodyH'] = round((r.max() - r.min()) * k)
+    manifest['sprites'][key] = entry
+
 # ───────────── UI icons (16x16 → 48x48 nearest) ─────────────
 IC = P('craftpix-net-994534-free-basic-pixel-art-fantasy-icons-16x16-for-ui', 'PNG', 'Separately')
 ICONS = {

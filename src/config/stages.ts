@@ -74,7 +74,7 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'brute', count: 1 }, { type: 'spitter', count: 3 }] },
     ],
     bossId: 'seaBeast',
-    objectives: ['Đánh bại Thủy Quái', 'Tránh container rơi'],
+    objectives: ['Đánh bại Xà Nữ Thủy Quái', 'Tránh container rơi'],
     rewardScore: 4000, reward: 'Danh tính người mua lõi năng lượng',
     hazards: [{ kind: 'container', intervalMs: 8500, warningMs: 1300, damage: 16 }],
     enemyHpMul: 1.2, enemyDmgMul: 1.2, music: 4,
@@ -116,7 +116,7 @@ export const STAGES: StageConfig[] = [
       { enemies: [{ type: 'screamer', count: 2 }, { type: 'brute', count: 2 }], maxAlive: 4 },
     ],
     bossId: 'iceKing',
-    objectives: ['Đánh bại Băng Vương', 'Đứng gần lò sưởi hoặc phá trụ băng để rút ngắn đóng băng'],
+    objectives: ['Đánh bại Băng Xà Hậu', 'Đứng gần lò sưởi hoặc phá trụ băng để rút ngắn đóng băng'],
     rewardScore: 5500, reward: 'Phá hủy bộ khuếch đại',
     hazards: [
       { kind: 'ice', intervalMs: 0, warningMs: 0, damage: 0 },

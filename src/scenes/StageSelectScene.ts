@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { STAGES } from '../config/stages';
-import { FONT } from '../game/constants';
+import { FONT, UI_OFFSET } from '../game/constants';
 import { SaveSystem } from '../systems/SaveSystem';
 import { Backdrop } from '../ui/Backdrop';
 import { MenuButton, MenuNav, title } from '../ui/MenuComponents';
@@ -13,6 +13,7 @@ export class StageSelectScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     new Backdrop(this, 'tower', 0.5);
     const save = SaveSystem.get().data;
     title(this, 640, 52, 'CHỌN MÀN CHƠI', 44);

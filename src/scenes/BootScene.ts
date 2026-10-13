@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { FONT } from '../game/constants';
+import { FONT, UI_OFFSET } from '../game/constants';
 
 /** Loads the UI web font (with a timeout fallback) before anything renders text. */
 export class BootScene extends Phaser.Scene {
@@ -8,6 +8,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     this.add.text(640, 360, 'Đang tải...', { fontFamily: 'Arial', fontSize: '28px', color: '#ffffff' }).setOrigin(0.5);
     const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
     const load = fonts

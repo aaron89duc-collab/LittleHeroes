@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { loadReferenceImages, paintAllArt } from '../art/registry';
 import { createSpriteAnims } from '../rig/SpriteView';
-import { FONT, GAME_W } from '../game/constants';
+import { loadHeroSheets, registerHeroSheets } from '../rig/HeroSpriteView';
+import { FONT, BASE_W, UI_OFFSET } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 
@@ -11,8 +12,9 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   preload(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     const bar = this.add.graphics();
-    const label = this.add.text(GAME_W / 2, 330, 'LITTLE HEROES', { fontFamily: FONT, fontSize: '48px', fontStyle: '800', color: '#ffd23f' }).setOrigin(0.5);
+    const label = this.add.text(BASE_W / 2, 330, 'LITTLE HEROES', { fontFamily: FONT, fontSize: '48px', fontStyle: '800', color: '#ffd23f' }).setOrigin(0.5);
     void label;
     this.load.on('progress', (v: number) => {
       bar.clear();
@@ -21,11 +23,13 @@ export class PreloadScene extends Phaser.Scene {
     });
     this.load.on('loaderror', (f: Phaser.Loader.File) => console.warn(`[assets] Failed to load ${f.key} (${f.src}) – a placeholder will be used.`));
     loadReferenceImages(this);
+    loadHeroSheets(this);
   }
 
   create(): void {
     paintAllArt(this);
     createSpriteAnims(this);
+    registerHeroSheets(this);
     const s = SaveSystem.get().data.settings;
     AudioSystem.get().setVolumes(s.musicVolume, s.sfxVolume);
     this.scene.start('MenuScene');

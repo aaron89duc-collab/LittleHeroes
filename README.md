@@ -99,6 +99,11 @@ tools/                  extract.py (cắt + tách nền ảnh tham chiếu), scr
 - Danh sách đầy đủ asset & trạng thái: xem `ASSET_MANIFEST.md`.
 - Tạo lại ảnh cắt từ ảnh tham chiếu: `pip install rembg onnxruntime pillow scipy` rồi `cd tools && python3 heads.py && python3 extract.py`.
 
+## Chơi toàn màn hình trên điện thoại
+
+- **Android (Chrome):** chạm lần đầu là game tự vào toàn màn hình và khóa ngang; có nút ⛶ ở menu và trong trận.
+- **iPhone (Safari):** Safari không cho trang web toàn màn hình → bấm **Chia sẻ → Thêm vào Màn hình chính**, mở từ biểu tượng đó (game là PWA, `display: fullscreen`).
+
 ## Đóng gói Android (bước riêng, tùy chọn)
 
 ```bash

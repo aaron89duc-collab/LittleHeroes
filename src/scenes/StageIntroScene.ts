@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { paintBackground } from '../art/registry';
 import { getStage } from '../config/stages';
-import { FONT, GAME_H, GAME_W } from '../game/constants';
+import { FONT, GAME_H, GAME_W, BASE_W, UI_OFFSET } from '../game/constants';
 import { AudioSystem } from '../systems/AudioSystem';
 import { panel, title } from '../ui/MenuComponents';
 
@@ -39,12 +39,13 @@ export class StageIntroScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     const s = getStage(this.d.stageId);
     const bg = paintBackground(this, s.theme);
-    this.add.tileSprite(0, 0, GAME_W, GAME_H, bg.far).setOrigin(0);
-    this.add.tileSprite(0, 0, GAME_W, 452, bg.mid).setOrigin(0);
-    this.add.tileSprite(0, 412, GAME_W, GAME_H - 412, bg.floor).setOrigin(0);
-    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, 0.55).setOrigin(0);
+    this.add.tileSprite(0, 0, GAME_W, GAME_H, bg.far).setOrigin(0).setScrollFactor(0);
+    this.add.tileSprite(0, 0, GAME_W, 452, bg.mid).setOrigin(0).setScrollFactor(0);
+    this.add.tileSprite(0, 412, GAME_W, GAME_H - 412, bg.floor).setOrigin(0).setScrollFactor(0);
+    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, 0.55).setOrigin(0).setScrollFactor(0);
     panel(this, 60, 70, 1160, 580);
     // art card: reference postcard when one matches, otherwise a live render of the stage background
     const cardX = 110;
@@ -52,7 +53,7 @@ export class StageIntroScene extends Phaser.Scene {
     if (s.cardKey && this.textures.exists(s.cardKey)) {
       this.add.image(cardX, cardY, s.cardKey).setOrigin(0).setDisplaySize(460, 262);
     } else {
-      const k = 460 / GAME_W;
+      const k = 460 / BASE_W;
       this.add.image(cardX, cardY, bg.far).setOrigin(0).setScale(k, 262 / GAME_H);
       this.add.image(cardX, cardY + 262 - 452 * k, bg.mid).setOrigin(0).setScale(k);
     }

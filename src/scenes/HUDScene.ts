@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { getMove } from '../config/moves';
 import { FONT, GAME_W } from '../game/constants';
 import { TouchController } from '../input/TouchController';
+import { fullscreenSupported, toggleFullscreen } from '../systems/Fullscreen';
 import { SaveSystem } from '../systems/SaveSystem';
 import { makeTouchButton, type TouchButtonView, VirtualJoystick } from '../ui/VirtualJoystick';
 import type { GameScene } from './GameScene';
@@ -95,6 +96,11 @@ export class HUDScene extends Phaser.Scene {
     const pb = this.add.circle(GAME_W - 40, 140, 24, 0x0b1230, 0.6).setStrokeStyle(3, 0xffffff, 0.8).setInteractive({ useHandCursor: true });
     this.add.text(GAME_W - 40, 140, 'II', st(20)).setOrigin(0.5);
     pb.on('pointerdown', () => TouchController.get().press('pause'));
+    if (fullscreenSupported()) {
+      const fb = this.add.circle(GAME_W - 96, 140, 24, 0x0b1230, 0.6).setStrokeStyle(3, 0xffffff, 0.8).setInteractive({ useHandCursor: true });
+      this.add.text(GAME_W - 96, 140, '⛶', st(22)).setOrigin(0.5);
+      fb.on('pointerup', () => void toggleFullscreen());
+    }
 
     this.setupTouch();
     this.input.addPointer(3);
@@ -108,12 +114,12 @@ export class HUDScene extends Phaser.Scene {
     const o = s.touchControlsOpacity;
     this.joystick = new VirtualJoystick(this, o);
     this.touchButtons = [
-      makeTouchButton(this, 'attack', 1150, 590, 66, 'ĐÁNH', 0xb3261e, o),
-      makeTouchButton(this, 'jump', 1022, 652, 46, 'NHẢY', 0x1d6fd6, o),
-      makeTouchButton(this, 'dodge', 1170, 452, 44, 'NÉ', 0x2a9d5a, o),
-      makeTouchButton(this, 'skill', 1030, 520, 48, 'KỸ', 0x7a3fd6, o),
-      makeTouchButton(this, 'ultimate', 900, 640, 40, 'TUYỆT', 0xd69a00, o),
-      makeTouchButton(this, 'cycleSkill', 920, 528, 28, '⟳', 0x34407a, o),
+      makeTouchButton(this, 'attack', GAME_W - 130, 590, 66, 'ĐÁNH', 0xb3261e, o),
+      makeTouchButton(this, 'jump', GAME_W - 258, 652, 46, 'NHẢY', 0x1d6fd6, o),
+      makeTouchButton(this, 'dodge', GAME_W - 110, 452, 44, 'NÉ', 0x2a9d5a, o),
+      makeTouchButton(this, 'skill', GAME_W - 250, 520, 48, 'KỸ', 0x7a3fd6, o),
+      makeTouchButton(this, 'ultimate', GAME_W - 380, 640, 40, 'TUYỆT', 0xd69a00, o),
+      makeTouchButton(this, 'cycleSkill', GAME_W - 360, 528, 28, '⟳', 0x34407a, o),
     ];
   }
 

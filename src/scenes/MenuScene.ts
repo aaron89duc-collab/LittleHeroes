@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
-import { HEADS } from '../art/registry';
 import { CHARACTER_ORDER } from '../config/characters';
 import { getMove } from '../config/moves';
-import { FONT, GAME_W } from '../game/constants';
-import { Rig } from '../rig/Rig';
+import { FONT, BASE_W, UI_OFFSET } from '../game/constants';
+import { createHeroView, type HeroViewT } from '../rig/HeroSpriteView';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { Backdrop } from '../ui/Backdrop';
+import { fullscreenSupported, isIOS, isStandalone, toggleFullscreen } from '../systems/Fullscreen';
 import { MenuButton, MenuNav } from '../ui/MenuComponents';
 
 export function drawLogo(scene: Phaser.Scene, x: number, y: number, scale = 1): Phaser.GameObjects.Container {
@@ -52,7 +52,7 @@ export function drawLogo(scene: Phaser.Scene, x: number, y: number, scale = 1): 
 }
 
 export class MenuScene extends Phaser.Scene {
-  private rigs: Rig[] = [];
+  private rigs: HeroViewT[] = [];
   private demoT = 0;
 
   constructor() {
@@ -60,6 +60,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     this.rigs = [];
     new Backdrop(this, 'street', 0.25);
     const save = SaveSystem.get();
@@ -68,18 +69,9 @@ export class MenuScene extends Phaser.Scene {
 
     // the three heroes, built from the reference artwork
     CHARACTER_ORDER.forEach((id, i) => {
-      const h = HEADS[`head-${id}`];
-      const r = new Rig(this, {
-        partKey: `rig-${id}`,
-        headKey: h.key,
-        headHeight: h.height,
-        headAnchorY: h.anchorY,
-        headOffsetX: h.offsetX,
-        scale: 1.7,
-        tailKey: id === 'shu-shu' ? 'tail-shu-shu' : undefined,
-        bulk: id === 'bap' ? 1.12 : 1,
-      });
-      r.setPosition(200 + i * 230, 650 + (i === 1 ? 20 : 0)).setDepth(10 + i);
+      const r = createHeroView(this, id, 1.7);
+      r.setPosition(200 + i * 230, 650 + (i === 1 ? 20 : 0));
+      r.setDepth(10 + i);
       this.rigs.push(r);
       this.add.image(r.x, r.y + 4, 'fx-shadow').setScale(2.4, 1.8).setDepth(5);
     });
@@ -99,12 +91,24 @@ export class MenuScene extends Phaser.Scene {
     if (hasProgress) buttons[1].emit('hover');
 
     this.add
-      .text(GAME_W - 16, 704, 'v1.0 • Phaser 3 + TypeScript', { fontFamily: FONT, fontSize: '14px', color: '#8fa0d0' })
+      .text(BASE_W - 16, 704, 'v1.0 • Phaser 3 + TypeScript', { fontFamily: FONT, fontSize: '14px', color: '#8fa0d0' })
       .setOrigin(1, 1);
     const hint = this.add
       .text(bx, 668, 'Mũi tên/WASD để chọn • Enter để xác nhận', { fontFamily: FONT, fontSize: '16px', color: '#c9d6ff' })
       .setOrigin(0.5);
     void hint;
+    // full screen (phones): button + iPhone hint
+    if (fullscreenSupported()) {
+      const fs = this.add
+        .text(BASE_W - 16, 16, '⛶ Toàn màn hình', { fontFamily: FONT, fontSize: '22px', fontStyle: '800', color: '#ffffff', backgroundColor: '#1d3170', padding: { x: 12, y: 6 } })
+        .setOrigin(1, 0)
+        .setInteractive({ useHandCursor: true });
+      fs.on('pointerup', () => void toggleFullscreen());
+    } else if (isIOS() && !isStandalone()) {
+      this.add
+        .text(BASE_W - 16, 16, 'iPhone: bấm Chia sẻ ⬆ → "Thêm vào MH chính" để chơi toàn màn hình', { fontFamily: FONT, fontSize: '17px', color: '#ffffff', backgroundColor: '#1d3170', padding: { x: 10, y: 6 }, wordWrap: { width: 420 } })
+        .setOrigin(1, 0);
+    }
     this.input.once('pointerdown', () => AudioSystem.get().unlock());
     this.input.keyboard?.once('keydown', () => {
       AudioSystem.get().unlock();

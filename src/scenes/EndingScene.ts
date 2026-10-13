@@ -1,9 +1,8 @@
 import Phaser from 'phaser';
-import { HEADS } from '../art/registry';
 import { CHARACTER_ORDER } from '../config/characters';
-import { FONT, GAME_H, GAME_W } from '../game/constants';
+import { FONT, GAME_H, GAME_W, UI_OFFSET } from '../game/constants';
 import { VICTORY, VICTORY2 } from '../rig/Poses';
-import { Rig } from '../rig/Rig';
+import { createHeroView, type HeroViewT } from '../rig/HeroSpriteView';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { Backdrop } from '../ui/Backdrop';
@@ -19,7 +18,7 @@ const LINES = [
 
 /** Short ending cinematic (GDD §4.4) followed by campaign results. */
 export class EndingScene extends Phaser.Scene {
-  private rigs: Rig[] = [];
+  private rigs: HeroViewT[] = [];
   private step = 0;
 
   constructor() {
@@ -27,14 +26,14 @@ export class EndingScene extends Phaser.Scene {
   }
 
   create(d: ResultData): void {
+    this.cameras.main.setScroll(-UI_OFFSET, 0);
     this.rigs = [];
     this.step = 0;
     new Backdrop(this, 'street', 0.2);
-    const dawn = this.add.rectangle(0, 0, GAME_W, GAME_H, 0xffa860, 0).setOrigin(0).setBlendMode(Phaser.BlendModes.ADD);
+    const dawn = this.add.rectangle(0, 0, GAME_W, GAME_H, 0xffa860, 0).setOrigin(0).setScrollFactor(0).setBlendMode(Phaser.BlendModes.ADD);
     this.tweens.add({ targets: dawn, fillAlpha: 0.25, duration: 6000 });
     CHARACTER_ORDER.forEach((id, i) => {
-      const h = HEADS[`head-${id}`];
-      const r = new Rig(this, { partKey: `rig-${id}`, headKey: h.key, headHeight: h.height, headAnchorY: h.anchorY, headOffsetX: h.offsetX, scale: 1.8, tailKey: id === 'shu-shu' ? 'tail-shu-shu' : undefined, bulk: id === 'bap' ? 1.12 : 1 });
+      const r = createHeroView(this, id, 1.8);
       r.setPosition(380 + i * 260, 660);
       r.hold('v', i % 2 ? VICTORY2 : VICTORY, 300);
       this.rigs.push(r);
@@ -43,7 +42,7 @@ export class EndingScene extends Phaser.Scene {
       .text(640, 150, '', { fontFamily: FONT, fontSize: '30px', fontStyle: '700', color: '#ffffff', stroke: '#0b1230', strokeThickness: 6, align: 'center', wordWrap: { width: 1000 } })
       .setOrigin(0.5));
     const shard = this.add.image(1180, 640, 'fx-glow').setTint(0xb44dff).setScale(0.6).setAlpha(0).setBlendMode(Phaser.BlendModes.ADD);
-    AudioSystem.get().playMusic(10);
+    AudioSystem.get().playMusic(11);
     const next = (): void => {
       if (this.step < LINES.length) {
         text.setText(LINES[this.step]).setAlpha(0);
@@ -71,7 +70,7 @@ export class EndingScene extends Phaser.Scene {
     this.storyText?.setVisible(false);
     const save = SaveSystem.get().data;
     const total = Object.values(save.bestScores).reduce((a, b) => a + b, 0);
-    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, 0.6).setOrigin(0);
+    this.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, 0.6).setOrigin(0).setScrollFactor(0);
     title(this, 640, 140, 'CHIẾN DỊCH HOÀN THÀNH!', 58);
     this.add.text(640, 220, `Tổng điểm kỷ lục 10 màn: ${total}\nĐiểm màn cuối: ${d.total ?? d.score}`, { fontFamily: FONT, fontSize: '28px', color: '#ffffff', align: 'center' }).setOrigin(0.5);
     this.add.text(640, 300, 'Đã mở khóa: CHẾ ĐỘ KHÓ cho cả 10 màn!', { fontFamily: FONT, fontSize: '26px', fontStyle: '800', color: '#ff8a3d' }).setOrigin(0.5);

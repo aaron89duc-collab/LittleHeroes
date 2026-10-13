@@ -15,7 +15,7 @@ export class Backdrop {
     this.far = scene.add.tileSprite(0, 0, GAME_W, GAME_H, k.far).setOrigin(0).setScrollFactor(0);
     this.mid = scene.add.tileSprite(0, 0, GAME_W, FLOOR_TOP, k.mid).setOrigin(0).setScrollFactor(0);
     this.floor = scene.add.tileSprite(0, FLOOR_TOP - 40, GAME_W, GAME_H - FLOOR_TOP + 40, k.floor).setOrigin(0).setScrollFactor(0);
-    if (dim > 0) scene.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, dim).setOrigin(0);
+    if (dim > 0) scene.add.rectangle(0, 0, GAME_W, GAME_H, 0x05081a, dim).setOrigin(0).setScrollFactor(0);
     const fn = (_t: number, dt: number): void => this.update(dt);
     scene.events.on('update', fn);
     scene.events.once('shutdown', () => scene.events.off('update', fn));
