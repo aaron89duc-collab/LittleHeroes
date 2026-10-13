@@ -1,0 +1,1 @@
+{"frameW": 360, "frameH": 270, "footY": 0.959, "facing": "right", "frames": 16, "bodyH": 229, "slots": {"IDLE": 0, "BLINK": 0, "WALK1": 1, "WALK2": 0, "RUN1": 2, "RUN2": 1, "JUMP": 3, "CROUCH": 14, "GUARD": 14, "PUNCH": 4, "KNEE": 14, "KICK": 5, "HURT": 6, "KNOCK": 7, "KO": 8, "WIN": 9}, "walk": [1, 0, 2, 0], "win": [9, 10, 11, 13]}
