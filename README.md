@@ -42,15 +42,15 @@ Game là web tĩnh (không cần backend/database). Tiến trình và cài đặ
 
 | Hành động | Bàn phím | Cảm ứng |
 |---|---|---|
-| Di chuyển (8 hướng, có trục sâu) | A/D/W/S hoặc phím mũi tên | Joystick ảo bên trái |
-| Đánh thường / combo 3 đòn | J | ĐÁNH |
-| Kỹ năng đang chọn | K | KỸ |
-| Đổi kỹ năng | I hoặc Q, hoặc phím 1-2-3 | ⟳ |
-| Né / lướt (có khung bất tử) | L | NÉ |
-| Nhảy (J trên không = đòn nhảy) | Space | NHẢY |
-| Tuyệt kỹ (100 EN) | U | TUYỆT |
+| Di chuyển (8 hướng, có trục sâu) | Phím mũi tên ◀▲▼▶ | Joystick ảo bên trái |
+| Đánh thường / combo 3 đòn | **A** (hoặc J) | ĐÁNH |
+| Kỹ năng đang chọn | **S** (hoặc K) | KỸ |
+| Né / lướt (có khung bất tử) | **D** (hoặc L) | NÉ |
+| Nhảy (A trên không = đòn nhảy) | **Z** (hoặc Space) | NHẢY |
+| Tuyệt kỹ (100 EN) | **X** (hoặc U) | TUYỆT |
+| Đổi kỹ năng | **C** (hoặc Q / I), hoặc phím 1-2-3 | ⟳ |
 | Tạm dừng | Esc / P | nút II |
-| Xác nhận menu | Enter | chạm |
+| Xác nhận menu | Enter / Space / A / Z | chạm |
 
 Trên điện thoại hãy xoay ngang; khi màn hình dọc game hiện lời nhắc xoay máy. Nút cảm ứng có thể bật/tắt và chỉnh độ trong trong **Cài đặt**.
 
