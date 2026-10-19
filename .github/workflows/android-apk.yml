@@ -1,0 +1,60 @@
+# Builds the Android app (APK) in the cloud on GitHub — no Android Studio needed on your PC.
+# GitHub → Actions → "Android APK" → Run workflow. When it finishes, download
+# "little-heroes-apk" from the run page (Artifacts) and install the .apk on your phone.
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write # only used to attach the APK to a release when you push a v* tag
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install
+        run: npm ci
+
+      - name: Build the web game
+        run: npm run build
+
+      - name: Copy the game into the Android project
+        run: npx cap sync android
+
+      - name: Build APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Rename
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk little-heroes.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: little-heroes-apk
+          path: little-heroes.apk
+          retention-days: 30
+
+      - name: Attach to the GitHub release (tags v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: little-heroes.apk
