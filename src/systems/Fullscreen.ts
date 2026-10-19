@@ -4,6 +4,8 @@
  * - iPhone Safari has no Fullscreen API for pages: the game is a PWA (manifest + apple meta tags),
  *   so "Add to Home Screen" launches it full screen without browser bars.
  */
+import { isNativeApp } from './Platform';
+
 type FsDoc = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> };
 type FsEl = HTMLElement & { webkitRequestFullscreen?: (opts?: unknown) => Promise<void> };
 
@@ -15,11 +17,14 @@ export const isIOS = (): boolean =>
 
 export const isStandalone = (): boolean =>
   typeof window !== 'undefined' &&
-  (window.matchMedia?.('(display-mode: fullscreen)').matches ||
+  // the Android app is always full screen (immersive mode set by MainActivity)
+  (isNativeApp() ||
+    window.matchMedia?.('(display-mode: fullscreen)').matches ||
     window.matchMedia?.('(display-mode: standalone)').matches ||
     (navigator as Navigator & { standalone?: boolean }).standalone === true);
 
 export function fullscreenSupported(): boolean {
+  if (isNativeApp()) return false; // nothing to toggle in the app
   const el = document.documentElement as FsEl;
   return !!(el.requestFullscreen || el.webkitRequestFullscreen);
 }
@@ -83,7 +88,10 @@ export function installAutoFullscreen(): void {
 }
 
 export const isInAppBrowser = (): boolean =>
-  typeof navigator !== 'undefined' && /FBAN|FBAV|FB_IAB|Instagram|Zalo|Line\/|Messenger|TikTok|wv\)/i.test(navigator.userAgent);
+  typeof navigator !== 'undefined' &&
+  // our own Android app is a WebView too ("wv" in its user agent)
+  !isNativeApp() &&
+  /FBAN|FBAV|FB_IAB|Instagram|Zalo|Line\/|Messenger|TikTok|wv\)/i.test(navigator.userAgent);
 
 /**
  * Touch devices get a start gate: a real button tap is the most reliable user gesture for the

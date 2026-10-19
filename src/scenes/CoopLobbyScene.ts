@@ -5,6 +5,7 @@ import { BASE_W, GAME_W, UI_OFFSET } from '../game/constants';
 import { CoopNet, normalizeCode } from '../net/Net';
 import { AudioSystem } from '../systems/AudioSystem';
 import { SaveSystem } from '../systems/SaveSystem';
+import { isNativeApp, PUBLIC_URL } from '../systems/Platform';
 import type { CharacterId } from '../types/game';
 import { Backdrop } from '../ui/Backdrop';
 import { title } from '../ui/MenuComponents';
@@ -155,7 +156,8 @@ export class CoopLobbyScene extends Phaser.Scene {
   }
 
   private shareLink(): string {
-    const u = new URL(location.href);
+    // from the Android app, invite to the web version (works in any phone browser)
+    const u = new URL(isNativeApp() ? PUBLIC_URL + '/' : location.href);
     u.search = `?room=${this.net.code}`;
     u.hash = '';
     return u.toString();

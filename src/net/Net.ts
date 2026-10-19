@@ -1,4 +1,5 @@
 import Peer, { type DataConnection, type PeerOptions } from 'peerjs';
+import { isNativeApp, PUBLIC_URL } from '../systems/Platform';
 
 /**
  * Online co-op transport: a direct WebRTC data channel between the two players (PeerJS).
@@ -42,7 +43,8 @@ async function fetchIceServers(): Promise<RTCIceServer[]> {
   try {
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), 3500);
-    const r = await fetch('/api/ice', { signal: ctl.signal, cache: 'no-store' });
+    // the Android app is served from https://localhost: ask the public site instead
+    const r = await fetch(isNativeApp() ? `${PUBLIC_URL}/api/ice` : '/api/ice', { signal: ctl.signal, cache: 'no-store' });
     clearTimeout(timer);
     if (!r.ok) throw new Error(String(r.status));
     const j = (await r.json()) as { iceServers?: RTCIceServer[] };

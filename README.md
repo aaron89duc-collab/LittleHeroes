@@ -112,19 +112,11 @@ tools/                  extract.py (cắt + tách nền ảnh tham chiếu), scr
 - **Android (Chrome):** chạm lần đầu là game tự vào toàn màn hình và khóa ngang; có nút ⛶ ở menu và trong trận.
 - **iPhone (Safari):** Safari không cho trang web toàn màn hình → bấm **Chia sẻ → Thêm vào Màn hình chính**, mở từ biểu tượng đó (game là PWA, `display: fullscreen`).
 
-## Đóng gói Android (bước riêng, tùy chọn)
+## Ứng dụng Android (APK)
 
-```bash
-npm run build
-npm i @capacitor/core @capacitor/cli @capacitor/android
-npx cap init "Little Heroes" com.example.littleheroes --web-dir=dist
-npx cap add android
-npx cap sync android
-npx cap open android      # build APK/AAB trong Android Studio
-```
-
-Khóa hướng màn hình ngang: trong `android/app/src/main/AndroidManifest.xml`, thêm
-`android:screenOrientation="sensorLandscape"` cho `<activity>`.
+Project Android (Capacitor) đã có sẵn trong `android/`: xoay ngang, toàn màn hình, chơi offline, Co-op online vẫn chạy.
+Build APK ngay trên GitHub (**Actions → Android APK → Run workflow**) hoặc bằng Android Studio
+(`npm run android:sync` → `npm run android:open`). Hướng dẫn đầy đủ: **[docs/ANDROID.md](docs/ANDROID.md)**.
 
 ## Ghi chú kỹ thuật
 

@@ -21,7 +21,8 @@ const STUN: Ice[] = [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun.cloudfl
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+    // the Android app (https://localhost) also asks for this list
+    headers: { 'content-type': 'application/json', 'cache-control': 'no-store', 'access-control-allow-origin': '*' },
   });
 }
 
